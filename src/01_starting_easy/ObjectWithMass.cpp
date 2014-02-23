@@ -26,6 +26,13 @@ Vector3D ObjectWithMass::getDistance(const ObjectWithMass &other) const
   return this->position.sub(other.position);
 }
 
+double ObjectWithMass::getGravityAcceleration(const ObjectWithMass &other) const
+{
+  Vector3D wayToOther=getDistance(other);
+  double distance=wayToOther.length();
+  return GRAVITYCONST*other.getMass()/distance/distance;
+}
+
 std::ostream& operator<<(std::ostream &strm, const ObjectWithMass &a)
 {
   return strm << "Object: " << a.getName() << " Mass: " << a.getMass() << " Pos: " << a.getPosition();

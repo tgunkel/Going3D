@@ -21,6 +21,12 @@ class ObjectWithMass
   // Distance to other object as a vector
   Vector3D    getDistance(const ObjectWithMass &other) const;
 
+  // get the acceleration through another object
+  double getGravityAcceleration(const ObjectWithMass &other) const;
+
+  // http://en.wikipedia.org/wiki/Gravitational_constant
+  const static double GRAVITYCONST=.0000000000667384;
+
  private:
   const char* name;
   double mass;
