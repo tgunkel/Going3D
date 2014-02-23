@@ -1,14 +1,12 @@
 # Enforce that $CC contains a valid compiler
-ifndef CC
-CC=gcc
-endif
+CPP=g++
 
 # Some variables that our compiler understands
 CFLAGS=-c -Wall -O2
 LDFLAGS= -L/usr/X11R6/lib -lGLU -lGL -lglut -lm 
 
 # List of all source files
-SOURCES=main.c
+SOURCES=main.cpp Vector3D.cpp
 
 # Replace .cpp with .h the get the header files names
 HEADERS=$(SOURCES:.cpp=.h)
@@ -23,13 +21,13 @@ EXECUTABLE=3d
 all: $(SOURCES) $(EXECUTABLE)
 
 $(EXECUTABLE): $(OBJECTS) $(HEADERS)
-	$(CC) $(OBJECTS) $(LDFLAGS) -o $@
+	$(CPP) $(OBJECTS) $(LDFLAGS) -o $@
 
-%.o: %.c
-	$(CC) $(CFLAGS) $< -o $@
+%.o: %.cpp
+	$(CPP) $(CFLAGS) $< -o $@
 
 .PHONY: clean
 clean:
 	-rm *.o
-	-rm *~
+	-rm *~ 2>/dev/null
 	-rm $(EXECUTABLE)
