@@ -4,42 +4,42 @@ Vector3D::Vector3D(double pX, double pY, double pZ)
 {
   x=pX;
   y=pY;
-  y=pZ;
+  z=pZ;
 }
 
-double   const Vector3D::getX()
+double Vector3D::getX() const
 {
   return x;
 }
 
-double   const Vector3D::getY()
+double   Vector3D::getY() const
 {
   return y;
 }
 
-double   const Vector3D::getZ()
+double   Vector3D::getZ() const
 {
   return z;
 }
 
-Vector3D const Vector3D::add(const Vector3D &other)
+Vector3D Vector3D::add(const Vector3D &other) const
 {
   Vector3D res(x+other.x, y+other.y, z+other.z);
   return res;
 }
 
-Vector3D const Vector3D::sub(const Vector3D &other)
+Vector3D Vector3D::sub(const Vector3D &other) const
 {
   Vector3D res(x-other.x, y-other.y, z-other.z);
   return res;
 }
 
-double   const  Vector3D::length()
+double   Vector3D::length() const
 {
   return sqrt(x*x+y*y+z*z);
 }
 
-Vector3D const  Vector3D::normalize()
+Vector3D Vector3D::normalize() const
 {
   if(this->length()>0.0)
     {
@@ -52,12 +52,12 @@ Vector3D const  Vector3D::normalize()
     }
 }
 
-Vector3D const Vector3D::mult(double scalar)
+Vector3D Vector3D::mult(double scalar) const
 {
   return Vector3D(x*scalar, y*scalar, z*scalar);
 }
 
 std::ostream& operator<<(std::ostream &strm, const Vector3D &a)
 {
-  return strm << "Thorsten";
+  return strm << "(" << a.getX() << "/" << a.getY() << "/" << a.getZ() << ")";
 }

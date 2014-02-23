@@ -14,28 +14,28 @@ class Vector3D
   Vector3D(double pX, double pY, double pZ);
 
   // get the X value
-  double   const getX();
+  double   getX() const;
 
   // get the Y value
-  double   const getY();
+  double   getY() const;
 
   // get the Z value
-  double   const getZ();
+  double   getZ() const;
 
   // return a new Vector3D which is the sum of us and the other
-  Vector3D const add(const Vector3D &other);
+  Vector3D add(const Vector3D &other) const;
 
   // return a new Vector3D which is we-other
-  Vector3D const sub(const Vector3D &other);
+  Vector3D sub(const Vector3D &other) const;
 
   // the length of ourself
-  double   const length();
+  double  length() const;
 
   // a new vector which point in the same direction we do, but with length 1
-  Vector3D const normalize();
+  Vector3D normalize() const;
 
   // a new vector where all values have been multiplied with your scalar
-  Vector3D const mult(double scalar);  
+  Vector3D mult(double scalar) const;
 
  private:
   double x,y,z;
