@@ -2,19 +2,28 @@
 #include <GL/glut.h>
 #include "Vector3D.h"
 #include <iostream>
-#include "ObjectWithMass.h"
+#include "RoundObjectWithMass.h"
+
+  RoundObjectWithMass sun  ("Sun",      1989000000000000000000000000000.0, 695500000.0, 0.0,0.0,0.0);
+  RoundObjectWithMass earth("Earth",          5972000000000000000000000.0,   6371000.0, 149600000000.0,0.0,0.0);
+  RoundObjectWithMass earth_moon("Earth Moon",  73477000000000000000000.0,   1738140.0, 149600000000.0-384400000.0,0.0,0.0);
 
 void fillObjects()
 {
-  ObjectWithMass sun  ("Sun",  1989000000000000000000000000000.0, 0.0,0.0,0.0);
-  ObjectWithMass earth("Earh",       5972000000000000000000000.0, 149600000000.0,0.0,0.0);
 
   std::cout << sun   << std::endl;
   std::cout << earth << std::endl;
+  std::cout << earth_moon << std::endl;
+
   std::cout << "Distance earth sun"   << sun.getDistance(earth) << std::endl;
   std::cout << "Acceleration earth: " << earth.getGravityAcceleration(sun)  << std::endl;
   std::cout << "Acceleration sun:"    << sun.getGravityAcceleration(earth)  << std::endl;
+
+  std::cout << "Distance earth moon"   << earth.getDistance(earth_moon) << std::endl;
+  std::cout << "Acceleration earth: "  << earth.getGravityAcceleration(earth_moon)  << std::endl;
+  std::cout << "Acceleration moon:"    << earth_moon.getGravityAcceleration(earth)  << std::endl;
 }
+
 
 void init (void) 
 {
@@ -33,12 +42,20 @@ void display(void)
   /*  paint the world black  */
   glClear (GL_COLOR_BUFFER_BIT);
 
-  glColor3f (1.0, 1.0, 0.0);
-  glutSolidSphere(0.1, 20, 20);
+  double zoom=192200000.0;
+
+  double startx=0.4;
+
+  // earth
+  glTranslatef(0.4,0,0);
+  glColor3f (3.0, 1.0, 0.0);
+  glutSolidSphere(earth.getRadius()/zoom, 30, 30);
   glPushMatrix();
-  glTranslatef(0.3,0,0);
+
+  // moon
+  glTranslatef(-1.6,0,0);
   glColor3ub(0,255,255);
-  glutSolidSphere(0.1, 20, 20);
+  glutSolidSphere(earth_moon.getRadius()/zoom, 30, 30);
   glPopMatrix();
   glFlush ();
 

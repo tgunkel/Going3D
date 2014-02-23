@@ -6,7 +6,7 @@ CFLAGS=-c -Wall -O2
 LDFLAGS= -L/usr/X11R6/lib -lGLU -lGL -lglut -lm 
 
 # List of all source files
-SOURCES=main.cpp Vector3D.cpp ObjectWithMass.cpp
+SOURCES=main.cpp Vector3D.cpp ObjectWithMass.cpp RoundObjectWithMass.cpp
 
 # Replace .cpp with .h the get the header files names
 HEADERS=$(SOURCES:.cpp=.h)
