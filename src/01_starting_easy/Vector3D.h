@@ -11,7 +11,7 @@ class Vector3D
 {
  public:
   // constructor
-  Vector3D(double pX, double pY, double pZ);
+  Vector3D(const double pX, const double pY, const double pZ);
 
   // get the X value
   double   getX() const;

@@ -1,6 +1,6 @@
 #include "Vector3D.h"
 
-Vector3D::Vector3D(double pX, double pY, double pZ)
+Vector3D::Vector3D(const double pX, const double pY, const double pZ)
 {
   x=pX;
   y=pY;
