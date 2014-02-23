@@ -1,5 +1,20 @@
 #include <GL/gl.h>
 #include <GL/glut.h>
+#include "Vector3D.h"
+#include <iostream>
+#include "ObjectWithMass.h"
+
+void fillObjects()
+{
+  ObjectWithMass sun  ("Sun",  1989000000000000000000000000000.0, 0.0,0.0,0.0);
+  ObjectWithMass earth("Earh",       5972000000000000000000000.0, 149600000000.0,0.0,0.0);
+
+  std::cout << sun   << std::endl;
+  std::cout << earth << std::endl;
+  std::cout << "Distance earth sun"   << sun.getDistance(earth) << std::endl;
+  std::cout << "Acceleration earth: " << earth.getGravityAcceleration(sun)  << std::endl;
+  std::cout << "Acceleration sun:"    << sun.getGravityAcceleration(earth)  << std::endl;
+}
 
 void init (void) 
 {
@@ -32,6 +47,7 @@ void display(void)
 
 int main(int argc, char** argv)
 {
+  fillObjects();
     glutInit(&argc, argv);
     glutInitDisplayMode (GLUT_SINGLE | GLUT_RGB);
     glutInitWindowSize (1024, 768); 
