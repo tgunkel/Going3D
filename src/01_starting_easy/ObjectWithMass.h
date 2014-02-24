@@ -7,7 +7,7 @@ class ObjectWithMass
 {
  public:
   // Constructor
-  ObjectWithMass(const char* pName, const double pMass, double x, double y, double z);
+  ObjectWithMass(const char* pName, const double pMass, const double x, const double y, const double z);
 
   // Name of the object
   const char* getName()     const;

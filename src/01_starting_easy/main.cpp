@@ -10,7 +10,7 @@
 
 void fillObjects()
 {
-
+  std::cout << "Gravity G:" << ObjectWithMass::GRAVITYCONST << std::endl;
   std::cout << sun   << std::endl;
   std::cout << earth << std::endl;
   std::cout << earth_moon << std::endl;
