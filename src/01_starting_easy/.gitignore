@@ -1,0 +1,5 @@
+# ignore bin files
+*.o
+
+# ignore binary
+3d
