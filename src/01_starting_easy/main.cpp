@@ -3,10 +3,12 @@
 #include "Vector3D.h"
 #include <iostream>
 #include "RoundObjectWithMass.h"
+#include "RBGColor.h"
+#include "Vector3D.h"
 
-RoundObjectWithMass sun  ("Sun",      1989000000000000000000000000000.0, 695500000.0, 0.0,0.0,0.0);
-RoundObjectWithMass earth("Earth",          5972000000000000000000000.0,   6371000.0, 149600000000.0,0.0,0.0);
-RoundObjectWithMass earth_moon("Earth Moon",  73477000000000000000000.0,   1738140.0, 149600000000.0-384400000.0,0.0,0.0);
+RoundObjectWithMass sun  ("Sun",      1989000000000000000000000000000.0, 695500000.0, Vector3D(0.0,0.0,0.0),                        RBGColor(255,255,  0));
+RoundObjectWithMass earth("Earth",          5972000000000000000000000.0,   6371000.0, Vector3D(149600000000.0,0.0,0.0),             RBGColor(0,    0,255));
+RoundObjectWithMass earth_moon("Earth Moon",  73477000000000000000000.0,   1738140.0, Vector3D(149600000000.0-384400000.0,0.0,0.0), RBGColor(255,255,255));
 
 void fillObjects()
 {
@@ -43,9 +45,34 @@ void init (void)
 double tg_pos=0.0;
 double tg_mov=0.01;
 
-void keyPressed (unsigned char key, int x, int y)
+double gx=0.0;
+double gy=0.0;
+double gz=0.0;
+
+void keyPressed(unsigned char key, int x, int y)
 {
-  std::cout << "Key pressed" << std::endl;
+  switch(key)
+    {
+    case 'q': exit(0);
+    case 'a': gx-=0.1; break;
+    case 'd': gx+=0.1; break;
+    case 'w': gy-=0.1; break;
+    case 's': gy+=0.1; break;
+    case 'e': gz-=0.1; break;
+    case 'c': gz+=0.1; break;
+    }
+  std::cout << "Key: " << key << " New pos: (" << gx << "/" << gy << "/" << gz << ")" << std::endl;
+}
+
+void paint(RoundObjectWithMass obj, double x, double y, double z)
+{
+  double zoom=192200000.0;
+
+  glPushMatrix();
+  glTranslatef(x,y,z);
+  glColor3f(obj.getColor().getRedInPercent(), obj.getColor().getGreenInPercent(), obj.getColor().getBlueInPercent());
+  glutSolidSphere(obj.getRadius()/zoom, 30, 30);
+  glPopMatrix();
 }
 
 void display(void)
@@ -53,7 +80,6 @@ void display(void)
   /*  paint the world black  */
   glClear (GL_COLOR_BUFFER_BIT);
 
-  double zoom=192200000.0;
 
   double startx=0.4;
 
@@ -77,25 +103,16 @@ void display(void)
 
   // restore the previous transformation matrix
   glPopMatrix();
-  // glFlush ();
+
+  paint(earth,      gx, gy, gz);
+  paint(earth_moon, 0.4, 0.0, 0.0);
+  paint(sun,        0.0, 0.0, -12.0);
+
   glutSwapBuffers();
 
   tg_pos=tg_pos+tg_mov;
   if(tg_pos>1 || tg_pos<-1) tg_mov=tg_mov*-1.0;
 
-  /*
-  // earth
-  glTranslatef(0.4,0,0);
-  glColor3f (3.0, 1.0, 0.0);
-  glutSolidSphere(earth.getRadius()/zoom, 30, 30);
-  glPushMatrix();
-
-  // moon
-  glTranslatef(-1.6,0,0);
-  glColor3ub(0,255,255);
-  glutSolidSphere(earth_moon.getRadius()/zoom, 30, 30);
-
-  */
 }
 
 void reshape (int width, int height)
@@ -112,17 +129,17 @@ void reshape (int width, int height)
 int main(int argc, char** argv)
 {
   fillObjects();
-    glutInit(&argc, argv);
-    //glutInitDisplayMode (GLUT_SINGLE | GLUT_RGB);
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB); // Enable double buffered mode, also replace glFlush wih glutSwapBuffers()
-    glutKeyboardFunc(keyPressed); 
-    glutInitWindowSize (1500, 768); 
-    glutInitWindowPosition (100, 100);
-    glutCreateWindow ("Our solar system");
-    init();
-    glutDisplayFunc(display); 
-    glutIdleFunc(display);
-    glutReshapeFunc(reshape);
-    glutMainLoop();
-    return 0;
+  glutInit(&argc, argv);
+  //glutInitDisplayMode (GLUT_SINGLE | GLUT_RGB);
+  glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB); // Enable double buffered mode, also replace glFlush wih glutSwapBuffers()
+  glutInitWindowSize (1500, 768); 
+  glutInitWindowPosition (100, 100);
+  glutCreateWindow ("Our solar system");
+  init();
+  glutKeyboardFunc(keyPressed); 
+  glutDisplayFunc(display); 
+  glutIdleFunc(display);
+  glutReshapeFunc(reshape);
+  glutMainLoop();
+  return 0;
 }

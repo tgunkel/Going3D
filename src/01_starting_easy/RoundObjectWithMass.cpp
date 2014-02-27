@@ -1,6 +1,6 @@
 #include "RoundObjectWithMass.h"
 
-RoundObjectWithMass::RoundObjectWithMass(const char* pName, const double pMass, double pRadius, double x, double y, double z) : ObjectWithMass(pName, pMass, x, y, z)
+RoundObjectWithMass::RoundObjectWithMass(const char* pName, const double pMass, const double pRadius, const Vector3D pPos, const RBGColor pColor) : ObjectWithMass(pName, pMass, pPos, pColor)
 {
   radius=pRadius;
 }

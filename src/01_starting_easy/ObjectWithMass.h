@@ -2,12 +2,13 @@
 #define _ObjectWithMass_h_
 
 #include "Vector3D.h"
+#include "RBGColor.h"
 
 class ObjectWithMass
 {
  public:
   // Constructor
-  ObjectWithMass(const char* pName, const double pMass, const double x, const double y, const double z);
+  ObjectWithMass(const char* pName, const double pMass, const Vector3D pPos, const  RBGColor pColor);
 
   // Name of the object
   const char* getName()     const;
@@ -24,6 +25,8 @@ class ObjectWithMass
   // get the acceleration through another object
   double getGravityAcceleration(const ObjectWithMass &other) const;
 
+  RBGColor getColor() const;
+
   // http://en.wikipedia.org/wiki/Gravitational_constant
   const static double GRAVITYCONST=.0000000000667384;
 
@@ -31,6 +34,7 @@ class ObjectWithMass
   const char* name;
   double mass;
   Vector3D position;
+  RBGColor color;
 };
 
 // override the << operator

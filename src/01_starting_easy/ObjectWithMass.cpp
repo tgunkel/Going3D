@@ -1,9 +1,10 @@
 #include "ObjectWithMass.h"
 
-ObjectWithMass::ObjectWithMass(const char* pName, const double pMass, const double x, const double y, const double z) : position(x,y,z)
+ObjectWithMass::ObjectWithMass(const char* pName, const double pMass, const Vector3D pPos, RBGColor pColor) : position(pPos), color(pColor)
 {
   this->name=pName;
   this->mass=pMass;
+  this->color=pColor;
 }
 
 const char* ObjectWithMass::getName() const
@@ -20,6 +21,12 @@ Vector3D ObjectWithMass::getPosition() const
 {
   return this->position;
 }
+
+RBGColor ObjectWithMass::getColor() const
+{
+  return this->color;
+}
+
 
 Vector3D ObjectWithMass::getDistance(const ObjectWithMass &other) const
 {
