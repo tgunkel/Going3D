@@ -30,6 +30,9 @@ void init (void)
   /*  set the background black  */
   glClearColor (0.0, 0.0, 0.0, 0.0);
 
+  /* */
+  glShadeModel (GL_FLAT);
+
   /*  initialize viewing values  */
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
@@ -55,6 +58,14 @@ void display(void)
   double startx=0.4;
 
   glClear(GL_STENCIL_BUFFER_BIT);
+
+
+  glColor3f (1.0, 1.0, 1.0);
+  glLoadIdentity ();
+
+  gluLookAt (0.0, 0.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+
+  glScalef (1.0, 2.0, 1.0);
 
   // store the current transformation matrix
   glPushMatrix();
@@ -87,14 +98,16 @@ void display(void)
   */
 }
 
-void reshape (int w, int h)
+void reshape (int width, int height)
 {
-   glViewport (0, 0, (GLsizei) w, (GLsizei) h); 
-   //glMatrixMode (GL_PROJECTION);
-   //glLoadIdentity();
-   //glFrustum (-3.0, 3.0, -3.0, 3.0, 3, 20.0);
-   //glMatrixMode (GL_MODELVIEW);
-}
+  glViewport(0, 0, (GLsizei)width, (GLsizei)height); // Set our viewport to the size of our window  
+  glMatrixMode(GL_PROJECTION); // Switch to the projection matrix so that we can manipulate how our scene is viewed  
+  glLoadIdentity(); // Reset the projection matrix to the identity matrix so that we don't get any artifacts (cleaning up)  
+  glFrustum (-1.0, 1.0, -1.0, 1.0, 1.5, 20.0);
+  //gluPerspective(60, (GLfloat)width / (GLfloat)height, 1.0, 5.0); // Set the Field of view angle (in degrees), the aspect ratio of our window, and the new and far planes  
+  glMatrixMode(GL_MODELVIEW); // Switch back to the model view matrix, so that we can start drawing shapes correctly  
+}  
+
 
 int main(int argc, char** argv)
 {
@@ -103,7 +116,7 @@ int main(int argc, char** argv)
     //glutInitDisplayMode (GLUT_SINGLE | GLUT_RGB);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB); // Enable double buffered mode, also replace glFlush wih glutSwapBuffers()
     glutKeyboardFunc(keyPressed); 
-    glutInitWindowSize (1024, 768); 
+    glutInitWindowSize (1500, 768); 
     glutInitWindowPosition (100, 100);
     glutCreateWindow ("Our solar system");
     init();
