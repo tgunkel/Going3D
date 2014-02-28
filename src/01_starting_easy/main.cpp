@@ -6,16 +6,18 @@
 #include "RBGColor.h"
 #include "Vector3D.h"
 
-RoundObjectWithMass sun  ("Sun",      1989000000000000000000000000000.0, 695500000.0, Vector3D(0.0,0.0,0.0),                        RBGColor(255,255,  0));
-RoundObjectWithMass earth("Earth",          5972000000000000000000000.0,   6371000.0, Vector3D(149600000000.0,0.0,0.0),             RBGColor(0,    0,255));
-RoundObjectWithMass earth_moon("Earth Moon",  73477000000000000000000.0,   1738140.0, Vector3D(149600000000.0-384400000.0,0.0,0.0), RBGColor(255,255,255));
+//RoundObjectWithMass sun  ("Sun",      1989000000000000000000000000000.0, 695500000.0, Vector3D(0.0,0.0,0.0),                        RBGColor(255,255,  0));
+RoundObjectWithMass earth("Earth",          5972000000000000000000000.0,   6371000.0, Vector3D(0.0,0.0,0.0),             RBGColor(0,    0,255));
+RoundObjectWithMass earth_moon("Earth Moon",  73477000000000000000000.0,   1738140.0, Vector3D(384400000.0,0.0,0.0), RBGColor(255,255,255));
 
 void fillObjects()
 {
+  /*
   std::cout << "Gravity G:" << ObjectWithMass::GRAVITYCONST << std::endl;
   std::cout << sun   << std::endl;
   std::cout << earth << std::endl;
   std::cout << earth_moon << std::endl;
+
 
   std::cout << "Distance earth sun"   << sun.getDistance(earth) << std::endl;
   std::cout << "Acceleration earth: " << earth.getGravityAcceleration(sun)  << std::endl;
@@ -24,10 +26,11 @@ void fillObjects()
   std::cout << "Distance earth moon"   << earth.getDistance(earth_moon) << std::endl;
   std::cout << "Acceleration earth: "  << earth.getGravityAcceleration(earth_moon)  << std::endl;
   std::cout << "Acceleration moon:"    << earth_moon.getGravityAcceleration(earth)  << std::endl;
+  */
 }
 
 
-void init (void) 
+void init (void)
 {
   /*  set the background black  */
   glClearColor (0.0, 0.0, 0.0, 0.0);
@@ -42,8 +45,6 @@ void init (void)
   gluOrtho2D(-1.0, 1.0, -1.0, 1.0);
 }
 
-double tg_pos=0.0;
-double tg_mov=0.01;
 
 double gx=0.0;
 double gy=0.0;
@@ -54,24 +55,29 @@ void keyPressed(unsigned char key, int x, int y)
   switch(key)
     {
     case 'q': exit(0);
-    case 'a': gx-=0.1; break;
-    case 'd': gx+=0.1; break;
-    case 'w': gy-=0.1; break;
-    case 's': gy+=0.1; break;
-    case 'e': gz-=0.1; break;
-    case 'c': gz+=0.1; break;
+    case 'a': earth_moon.addSpeedFromOutside(Vector3D(-50000.0,      0.0,      0.0)); break;
+    case 'd': earth_moon.addSpeedFromOutside(Vector3D(+50000.0,      0.0,      0.0)); break;
+    case 'w': earth_moon.addSpeedFromOutside(Vector3D(     0.0, +50000.0,      0.0)); break;
+    case 's': earth_moon.addSpeedFromOutside(Vector3D(     0.0, -50000.0,      0.0)); break;
+    case 'e': earth_moon.addSpeedFromOutside(Vector3D(     0.0,      0.0, -50000.0));; break;
+    case 'c': earth_moon.addSpeedFromOutside(Vector3D(     0.0,      0.0, +50000.0));; break;
     }
-  std::cout << "Key: " << key << " New pos: (" << gx << "/" << gy << "/" << gz << ")" << std::endl;
+  std::cout << "Key: " << key << " New speed: " << earth_moon.getSpeed() << std::endl;
 }
 
-void paint(RoundObjectWithMass obj, double x, double y, double z)
+void paint(RoundObjectWithMass obj)
 {
   double zoom=192200000.0;
 
+  // store the current transformation matrix
   glPushMatrix();
-  glTranslatef(x,y,z);
+
+  // do transformations
+  glTranslatef(obj.getPosition().getX()/zoom,obj.getPosition().getY()/zoom,obj.getPosition().getZ()/zoom);
   glColor3f(obj.getColor().getRedInPercent(), obj.getColor().getGreenInPercent(), obj.getColor().getBlueInPercent());
   glutSolidSphere(obj.getRadius()/zoom, 30, 30);
+
+  // restore the previous transformation matrix
   glPopMatrix();
 }
 
@@ -80,38 +86,27 @@ void display(void)
   /*  paint the world black  */
   glClear (GL_COLOR_BUFFER_BIT);
 
-
-  double startx=0.4;
-
   glClear(GL_STENCIL_BUFFER_BIT);
 
-
-  glColor3f (1.0, 1.0, 1.0);
   glLoadIdentity ();
 
   gluLookAt (0.0, 0.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 
   glScalef (1.0, 2.0, 1.0);
 
-  // store the current transformation matrix
-  glPushMatrix();
+  if(earth_moon.getPosition().getX()>earth.getPosition().getX())
+    earth_moon.setAccelerationFromOutside(Vector3D(-5,0,0));
+  else
+    earth_moon.setAccelerationFromOutside(Vector3D(5,0,0));
 
-  // do transformations
-  glTranslatef(tg_pos,0,0);
-  glColor3f (1.0, 1.0, 1.0);
-  glutSolidSphere(0.1, 30, 30);
+  earth.updatePosition(100.0);
+  earth_moon.updatePosition(100.0);
 
-  // restore the previous transformation matrix
-  glPopMatrix();
-
-  paint(earth,      gx, gy, gz);
-  paint(earth_moon, 0.4, 0.0, 0.0);
-  paint(sun,        0.0, 0.0, -12.0);
+  //  paint(sun,        0.0, 0.0, -12.0);
+  paint(earth_moon);
+  paint(earth);
 
   glutSwapBuffers();
-
-  tg_pos=tg_pos+tg_mov;
-  if(tg_pos>1 || tg_pos<-1) tg_mov=tg_mov*-1.0;
 
 }
 
