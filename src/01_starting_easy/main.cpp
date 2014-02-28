@@ -6,13 +6,13 @@
 #include "RBGColor.h"
 #include "Vector3D.h"
 
-//RoundObjectWithMass sun  ("Sun",      1989000000000000000000000000000.0, 695500000.0, Vector3D(0.0,0.0,0.0),                        RBGColor(255,255,  0));
-RoundObjectWithMass earth("Earth",          5972000000000000000000000.0,   6371000.0, Vector3D(0.0,0.0,0.0),             RBGColor(0,    0,255));
-RoundObjectWithMass earth_moon("Earth Moon",  73477000000000000000000.0,   1738140.0, Vector3D(384400000.0,0.0,0.0), RBGColor(255,255,255));
+RoundObjectWithMass sun  ("Sun",    1989000000000000000000000000000.0, 695500000.0, Vector3D(0,0.0,          -149600000000.0),  RBGColor(255,255,  0));
+//RoundObjectWithMass sun  ("Sun",            5972000000000000000000000.0,   630001000.0, Vector3D(,0.0,-149600000000.0),  RBGColor(255,255,  0));
+RoundObjectWithMass earth("Earth",          5972000000000000000000000.0,   6371000.0, Vector3D(0,0.0,0.0),             RBGColor(0,    0,255));
+RoundObjectWithMass earth_moon("Earth Moon",  73477000000000000000000.0,   1738140.0, Vector3D(384400000.0,0.0,0.0),     RBGColor(255,255,255));
 
 void fillObjects()
 {
-  /*
   std::cout << "Gravity G:" << ObjectWithMass::GRAVITYCONST << std::endl;
   std::cout << sun   << std::endl;
   std::cout << earth << std::endl;
@@ -23,6 +23,7 @@ void fillObjects()
   std::cout << "Acceleration earth: " << earth.getGravityAcceleration(sun)  << std::endl;
   std::cout << "Acceleration sun:"    << sun.getGravityAcceleration(earth)  << std::endl;
 
+  /*
   std::cout << "Distance earth moon"   << earth.getDistance(earth_moon) << std::endl;
   std::cout << "Acceleration earth: "  << earth.getGravityAcceleration(earth_moon)  << std::endl;
   std::cout << "Acceleration moon:"    << earth_moon.getGravityAcceleration(earth)  << std::endl;
@@ -55,19 +56,19 @@ void keyPressed(unsigned char key, int x, int y)
   switch(key)
     {
     case 'q': exit(0);
-    case 'a': earth_moon.addSpeedFromOutside(Vector3D(-50000.0,      0.0,      0.0)); break;
-    case 'd': earth_moon.addSpeedFromOutside(Vector3D(+50000.0,      0.0,      0.0)); break;
-    case 'w': earth_moon.addSpeedFromOutside(Vector3D(     0.0, +50000.0,      0.0)); break;
-    case 's': earth_moon.addSpeedFromOutside(Vector3D(     0.0, -50000.0,      0.0)); break;
-    case 'e': earth_moon.addSpeedFromOutside(Vector3D(     0.0,      0.0, -50000.0));; break;
-    case 'c': earth_moon.addSpeedFromOutside(Vector3D(     0.0,      0.0, +50000.0));; break;
+    case 'a': sun.addSpeedFromOutside(Vector3D(-50000000.0,      0.0,      0.0)); break;
+    case 'd': sun.addSpeedFromOutside(Vector3D(+50000000.0,      0.0,      0.0)); break;
+    case 'w': sun.addSpeedFromOutside(Vector3D(     0.0, +50000000.0,      0.0)); break;
+    case 's': sun.addSpeedFromOutside(Vector3D(     0.0, -50000000.0,      0.0)); break;
+    case 'e': sun.addSpeedFromOutside(Vector3D(     0.0,      0.0, -149600000000.0/100000));; break;
+    case 'c': sun.addSpeedFromOutside(Vector3D(     0.0,      0.0, +149600000000.0/100000));; break;
     }
-  std::cout << "Key: " << key << " New speed: " << earth_moon.getSpeed() << std::endl;
+  std::cout << "Key: " << key << " Sun: " << sun << std::endl;
 }
 
 void paint(RoundObjectWithMass obj)
 {
-  double zoom=192200000.0;
+  double zoom=102200000.0;
 
   // store the current transformation matrix
   glPushMatrix();
@@ -101,8 +102,10 @@ void display(void)
 
   earth.updatePosition(100.0);
   earth_moon.updatePosition(100.0);
+  sun.updatePosition(100.0);
 
   //  paint(sun,        0.0, 0.0, -12.0);
+  paint(sun);
   paint(earth_moon);
   paint(earth);
 
@@ -115,7 +118,7 @@ void reshape (int width, int height)
   glViewport(0, 0, (GLsizei)width, (GLsizei)height); // Set our viewport to the size of our window  
   glMatrixMode(GL_PROJECTION); // Switch to the projection matrix so that we can manipulate how our scene is viewed  
   glLoadIdentity(); // Reset the projection matrix to the identity matrix so that we don't get any artifacts (cleaning up)  
-  glFrustum (-1.0, 1.0, -1.0, 1.0, 1.5, 20.0);
+  glFrustum (-1.0, 1.0, -1.0, 1.0, 1.5, 5000.0);
   //gluPerspective(60, (GLfloat)width / (GLfloat)height, 1.0, 5.0); // Set the Field of view angle (in degrees), the aspect ratio of our window, and the new and far planes  
   glMatrixMode(GL_MODELVIEW); // Switch back to the model view matrix, so that we can start drawing shapes correctly  
 }  
