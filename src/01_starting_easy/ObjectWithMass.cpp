@@ -65,5 +65,5 @@ double ObjectWithMass::getGravityAcceleration(const ObjectWithMass &other) const
 
 std::ostream& operator<<(std::ostream &strm, const ObjectWithMass &a)
 {
-  return strm << "Object: " << a.getName() << " Mass: " << a.getMass() << " Pos: " << a.getPosition();
+  return strm << "Object: " << a.getName() << " Mass: " << a.getMass() << " Pos: " << a.getPosition() << " Speed: " << a.getSpeed();
 }
