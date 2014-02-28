@@ -28,6 +28,6 @@ $(EXECUTABLE): $(OBJECTS) $(HEADERS)
 
 .PHONY: clean
 clean:
-	-rm *.o
-	-rm *~ 2>/dev/null
-	-rm $(EXECUTABLE)
+	-rm *.o 2>/dev/null
+	-rm *~  2>/dev/null
+	-rm $(EXECUTABLE) 2>/dev/null
