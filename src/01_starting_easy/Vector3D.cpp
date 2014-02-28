@@ -57,6 +57,11 @@ Vector3D Vector3D::mult(double scalar) const
   return Vector3D(x*scalar, y*scalar, z*scalar);
 }
 
+Vector3D Vector3D::ZERO_ZERO_ZERO()
+{
+  return Vector3D(0.0, 0.0, 0.0);
+}
+
 std::ostream& operator<<(std::ostream &strm, const Vector3D &a)
 {
   return strm << "(" << a.getX() << "/" << a.getY() << "/" << a.getZ() << ")";

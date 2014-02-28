@@ -37,6 +37,9 @@ class Vector3D
   // a new vector where all values have been multiplied with your scalar
   Vector3D mult(double scalar) const;
 
+  // the 0/0/0 vector
+  static Vector3D ZERO_ZERO_ZERO();
+
  private:
   double x,y,z;
 };
