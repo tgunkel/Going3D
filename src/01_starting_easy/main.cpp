@@ -5,23 +5,36 @@
 #include "RoundObjectWithMass.h"
 #include "RBGColor.h"
 #include "Vector3D.h"
+#include "SystemWithObjects.h"
 
 RoundObjectWithMass sun  ("Sun",    1989000000000000000000000000000.0, 695500000.0, Vector3D(0,0.0,          -149600000000.0),  RBGColor(255,255,  0));
 //RoundObjectWithMass sun  ("Sun",            5972000000000000000000000.0,   630001000.0, Vector3D(,0.0,-149600000000.0),  RBGColor(255,255,  0));
 RoundObjectWithMass earth("Earth",          5972000000000000000000000.0,   6371000.0, Vector3D(0,0.0,0.0),             RBGColor(0,    0,255));
 RoundObjectWithMass earth_moon("Earth Moon",  73477000000000000000000.0,   1738140.0, Vector3D(384400000.0,0.0,0.0),     RBGColor(255,255,255));
 
+systemWithObjects solarsystem("Solar system");
+
 void fillObjects()
 {
+  earth_moon.addSpeedFromOutside(Vector3D(-500, -500, 0));
+
   std::cout << "Gravity G:" << ObjectWithMass::GRAVITYCONST << std::endl;
   std::cout << sun   << std::endl;
   std::cout << earth << std::endl;
   std::cout << earth_moon << std::endl;
 
 
+
   std::cout << "Distance earth sun"   << sun.getDistance(earth) << std::endl;
+  std::cout << "Force sun-earth:  "   << earth.getGravityForce(sun)  << std::endl;
   std::cout << "Acceleration earth: " << earth.getGravityAcceleration(sun)  << std::endl;
   std::cout << "Acceleration sun:"    << sun.getGravityAcceleration(earth)  << std::endl;
+
+  solarsystem.addNewObject(&sun);
+  solarsystem.addNewObject(&earth);
+  solarsystem.addNewObject(&earth_moon); 
+
+  std::cout << solarsystem  << std::endl;
 
   /*
   std::cout << "Distance earth moon"   << earth.getDistance(earth_moon) << std::endl;
@@ -36,6 +49,8 @@ void init (void)
   /*  set the background black  */
   glClearColor (0.0, 0.0, 0.0, 0.0);
 
+  glEnable(GL_DEPTH_TEST);
+ 
   /* */
   glShadeModel (GL_FLAT);
 
@@ -68,7 +83,7 @@ void keyPressed(unsigned char key, int x, int y)
 
 void paint(RoundObjectWithMass obj)
 {
-  double zoom=102200000.0;
+  double zoom=152200000.0;
 
   // store the current transformation matrix
   glPushMatrix();
@@ -85,9 +100,9 @@ void paint(RoundObjectWithMass obj)
 void display(void)
 {
   /*  paint the world black  */
-  glClear (GL_COLOR_BUFFER_BIT);
+  glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  glClear(GL_STENCIL_BUFFER_BIT);
+  // glClear(GL_STENCIL_BUFFER_BIT);
 
   glLoadIdentity ();
 
@@ -95,14 +110,7 @@ void display(void)
 
   glScalef (1.0, 2.0, 1.0);
 
-  if(earth_moon.getPosition().getX()>earth.getPosition().getX())
-    earth_moon.setAccelerationFromOutside(Vector3D(-5,0,0));
-  else
-    earth_moon.setAccelerationFromOutside(Vector3D(5,0,0));
-
-  earth.updatePosition(100.0);
-  earth_moon.updatePosition(100.0);
-  sun.updatePosition(100.0);
+  solarsystem.updateSystem(100.0);
 
   //  paint(sun,        0.0, 0.0, -12.0);
   paint(sun);
@@ -130,7 +138,7 @@ int main(int argc, char** argv)
   glutInit(&argc, argv);
   //glutInitDisplayMode (GLUT_SINGLE | GLUT_RGB);
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB); // Enable double buffered mode, also replace glFlush wih glutSwapBuffers()
-  glutInitWindowSize (1500, 768); 
+  glutInitWindowSize (2000, 768); 
   glutInitWindowPosition (100, 100);
   glutCreateWindow ("Our solar system");
   init();

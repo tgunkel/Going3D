@@ -4,7 +4,6 @@ ObjectWithMass::ObjectWithMass(const char* pName, const double pMass, const Vect
 {
   this->name=pName;
   this->mass=pMass;
-  this->color=pColor;
 }
 
 const char* ObjectWithMass::getName() const
@@ -25,6 +24,11 @@ Vector3D ObjectWithMass::getPosition() const
 Vector3D ObjectWithMass::getSpeed() const
 {
   return this->speed;
+}
+
+Vector3D ObjectWithMass::getAcceleration() const
+{
+  return this->acceleration;
 }
 
 RBGColor ObjectWithMass::getColor() const
@@ -55,15 +59,27 @@ void ObjectWithMass::updatePosition(double pTimePassed)
   this->position=this->position.add(movement);
 }
 
-
-double ObjectWithMass::getGravityAcceleration(const ObjectWithMass &other) const
+Vector3D ObjectWithMass::getGravityForce(const ObjectWithMass &other) const
 {
   Vector3D wayToOther=getDistance(other);
   double distance=wayToOther.length();
-  return GRAVITYCONST*other.getMass()/distance/distance;
+  Vector3D result=wayToOther.normalize();
+  double f=GRAVITYCONST*this->getMass()*other.getMass()/(distance*distance);
+  result=result.mult(f);
+  return result;
+}
+
+Vector3D ObjectWithMass::getGravityAcceleration(const ObjectWithMass &other) const
+{
+  Vector3D wayToOther=getDistance(other);
+  double distance=wayToOther.length();
+  Vector3D result=wayToOther.normalize();
+  double a=-GRAVITYCONST*other.getMass()/(distance*distance);
+  result=result.mult(a);
+  return result;
 }
 
 std::ostream& operator<<(std::ostream &strm, const ObjectWithMass &a)
 {
-  return strm << "Object: " << a.getName() << " Mass: " << a.getMass() << " Pos: " << a.getPosition() << " Speed: " << a.getSpeed();
+  return strm << "Object: " << a.getName() << " Mass: " << a.getMass() << " Pos: " << a.getPosition() << " Speed: " << a.getSpeed() << " Acceleration: " << a.getAcceleration();
 }

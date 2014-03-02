@@ -25,8 +25,14 @@ class ObjectWithMass
   // The current speed
   Vector3D    getSpeed() const;
 
+  // The current speed
+  Vector3D    getAcceleration() const;
+
   // get the acceleration through another object
-  double getGravityAcceleration(const ObjectWithMass &other) const;
+  Vector3D getGravityForce(const ObjectWithMass &other) const;
+
+  // get the acceleration through another object
+  Vector3D getGravityAcceleration(const ObjectWithMass &other) const;
 
   // get the color of the object
   RBGColor getColor() const;
@@ -47,11 +53,9 @@ class ObjectWithMass
   const char* name;
   double mass;
   Vector3D position;
+  RBGColor color;
   Vector3D speed;
   Vector3D acceleration;
-
-  RBGColor color;
-
 };
 
 // override the << operator
