@@ -12,7 +12,7 @@ RoundObjectWithMass sun  ("Sun",    1989000000000000000000000000000.0, 695500000
 RoundObjectWithMass earth("Earth",          5972000000000000000000000.0,   6371000.0, Vector3D(0,0.0,0.0),             RBGColor(0,    0,255));
 RoundObjectWithMass earth_moon("Earth Moon",  73477000000000000000000.0,   1738140.0, Vector3D(384400000.0,0.0,0.0),     RBGColor(255,255,255));
 
-systemWithObjects solarsystem("Solar system");
+SystemWithObjects solarsystem("Solar system");
 
 void fillObjects()
 {
