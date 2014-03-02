@@ -14,6 +14,8 @@ RoundObjectWithMass earth_moon("Earth Moon",  73477000000000000000000.0,   17381
 
 SystemWithObjects solarsystem("Solar system");
 
+Vector3D camerapos(0,0,5);
+
 void fillObjects()
 {
   earth_moon.addSpeedFromOutside(Vector3D(-500, -500, 0));
@@ -71,12 +73,12 @@ void keyPressed(unsigned char key, int x, int y)
   switch(key)
     {
     case 'q': exit(0);
-    case 'a': sun.addSpeedFromOutside(Vector3D(-50000000.0,      0.0,      0.0)); break;
-    case 'd': sun.addSpeedFromOutside(Vector3D(+50000000.0,      0.0,      0.0)); break;
-    case 'w': sun.addSpeedFromOutside(Vector3D(     0.0, +50000000.0,      0.0)); break;
-    case 's': sun.addSpeedFromOutside(Vector3D(     0.0, -50000000.0,      0.0)); break;
-    case 'e': sun.addSpeedFromOutside(Vector3D(     0.0,      0.0, -149600000000.0/100000));; break;
-    case 'c': sun.addSpeedFromOutside(Vector3D(     0.0,      0.0, +149600000000.0/100000));; break;
+    case 'a': camerapos=camerapos.add(Vector3D(-.1, 0,0)); break;
+    case 'd': camerapos=camerapos.add(Vector3D(+.1, 0,0)); break;
+    case 'w': camerapos=camerapos.add(Vector3D( 0,-.1,0)); break;
+    case 's': camerapos=camerapos.add(Vector3D( 0,+.1,0)); break;
+    case 'e': camerapos=camerapos.add(Vector3D( 0,  0,-.1)); break;
+    case 'c': camerapos=camerapos.add(Vector3D( 0,  0,+.1)); break;
     }
   std::cout << "Key: " << key << " Sun: " << sun << std::endl;
 }
@@ -106,7 +108,7 @@ void display(void)
 
   glLoadIdentity ();
 
-  gluLookAt (0.0, 0.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+  gluLookAt (camerapos.getX(), camerapos.getY(), camerapos.getZ(), camerapos.getX(), camerapos.getY(), camerapos.getZ()-5, 0.0, 1.0, 0.0);
 
   glScalef (1.0, 2.0, 1.0);
 
