@@ -57,6 +57,11 @@ Vector3D Vector3D::mult(double scalar) const
   return Vector3D(x*scalar, y*scalar, z*scalar);
 }
 
+Vector3D Vector3D::mult(Vector3D scalar) const
+{
+  return Vector3D(x*scalar.getX(), y*scalar.getY(), z*scalar.getZ());
+}
+
 Vector3D Vector3D::ZERO_ZERO_ZERO()
 {
   return Vector3D(0.0, 0.0, 0.0);
