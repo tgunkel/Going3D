@@ -81,5 +81,5 @@ Vector3D ObjectWithMass::getGravityAcceleration(const ObjectWithMass &other) con
 
 std::ostream& operator<<(std::ostream &strm, const ObjectWithMass &a)
 {
-  return strm << "Object: " << a.getName() << " Mass: " << a.getMass() << " Pos: " << a.getPosition() << " Speed: " << a.getSpeed() << " Acceleration: " << a.getAcceleration();
+  return strm << "Object: " << a.getName() << " Pos: " << a.getPosition() << " Speed: " << a.getSpeed() << " Acceleration: " << a.getAcceleration() << " Mass: " << a.getMass();
 }

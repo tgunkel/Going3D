@@ -6,33 +6,41 @@
 #include "RBGColor.h"
 #include "Vector3D.h"
 #include "SystemWithObjects.h"
+#include "Camera.h"
 
-RoundObjectWithMass sun  ("Sun",    1989000000000000000000000000000.0, 695500000.0, Vector3D(0,0.0,          -149600000000.0),  RBGColor(255,255,  0));
-//RoundObjectWithMass sun  ("Sun",            5972000000000000000000000.0,   630001000.0, Vector3D(,0.0,-149600000000.0),  RBGColor(255,255,  0));
-RoundObjectWithMass earth("Earth",          5972000000000000000000000.0,   6371000.0, Vector3D(0,0.0,0.0),             RBGColor(0,    0,255));
-RoundObjectWithMass earth_moon("Earth Moon",  73477000000000000000000.0,   1738140.0, Vector3D(384400000.0,0.0,0.0),     RBGColor(255,255,255));
+RoundObjectWithMass sun  ("Sun",    1989000000000000000000000000000.0,   695500000.0, Vector3D(0,0.0,-149600000000.0),  RBGColor(255,255,  0));
+RoundObjectWithMass earth("Earth",          5972000000000000000000000.0,   6371000.0, Vector3D(0,0.0,0.0),              RBGColor(0,    0,255));
+RoundObjectWithMass earth_moon("Earth Moon",  73477000000000000000000.0,   1738140.0, Vector3D(384400000.0,0.0,0.0),    RBGColor(255,255,255));
 
 SystemWithObjects solarsystem("Solar system");
 
-Vector3D camerapos(0,0,5);
+Vector3D scale(0.000000005, .000000005*2.0, 0.000000005);
+
+Camera camera(Vector3D(0,0,5), Vector3D(0,0,0));
+
+Vector3D angle(0,0,0);
 
 void fillObjects()
 {
+  std::cout << camera  << std::endl;
+
   earth_moon.addSpeedFromOutside(Vector3D(-500, -500, 0));
 
-  std::cout << "Gravity G:" << ObjectWithMass::GRAVITYCONST << std::endl;
+  //std::cout << "Gravity G:" << ObjectWithMass::GRAVITYCONST << std::endl;
+
   std::cout << sun   << std::endl;
   std::cout << earth << std::endl;
   std::cout << earth_moon << std::endl;
 
 
-
+  /*
   std::cout << "Distance earth sun"   << sun.getDistance(earth) << std::endl;
   std::cout << "Force sun-earth:  "   << earth.getGravityForce(sun)  << std::endl;
   std::cout << "Acceleration earth: " << earth.getGravityAcceleration(sun)  << std::endl;
   std::cout << "Acceleration sun:"    << sun.getGravityAcceleration(earth)  << std::endl;
+  */
 
-  solarsystem.addNewObject(&sun);
+  // solarsystem.addNewObject(&sun);
   solarsystem.addNewObject(&earth);
   solarsystem.addNewObject(&earth_moon); 
 
@@ -43,6 +51,8 @@ void fillObjects()
   std::cout << "Acceleration earth: "  << earth.getGravityAcceleration(earth_moon)  << std::endl;
   std::cout << "Acceleration moon:"    << earth_moon.getGravityAcceleration(earth)  << std::endl;
   */
+
+
 }
 
 
@@ -52,6 +62,9 @@ void init (void)
   glClearColor (0.0, 0.0, 0.0, 0.0);
 
   glEnable(GL_DEPTH_TEST);
+
+  // fix light for worlds with scaling
+  glEnable(GL_NORMALIZE);
  
   /* */
   glShadeModel (GL_FLAT);
@@ -63,37 +76,30 @@ void init (void)
   gluOrtho2D(-1.0, 1.0, -1.0, 1.0);
 }
 
-
-double gx=0.0;
-double gy=0.0;
-double gz=0.0;
-
 void keyPressed(unsigned char key, int x, int y)
 {
   switch(key)
     {
     case 'q': exit(0);
-    case 'a': camerapos=camerapos.add(Vector3D(-.1, 0,0)); break;
-    case 'd': camerapos=camerapos.add(Vector3D(+.1, 0,0)); break;
-    case 'w': camerapos=camerapos.add(Vector3D( 0,-.1,0)); break;
-    case 's': camerapos=camerapos.add(Vector3D( 0,+.1,0)); break;
-    case 'e': camerapos=camerapos.add(Vector3D( 0,  0,-.1)); break;
-    case 'c': camerapos=camerapos.add(Vector3D( 0,  0,+.1)); break;
+    case 'a': angle=angle.add(Vector3D(+1.0, 0.0,  0.0));   break;
+    case 'd': angle=angle.add(Vector3D(-1.0, 0.0,  0.0));   break;
+    case 'w': angle=angle.add(Vector3D( 0.0, +1.0, 0.0));   break;
+    case 's': angle=angle.add(Vector3D( 0.0, -1.0, 0.0));   break;
+    case 'e': angle=angle.add(Vector3D( 0.0, 0.0, +1.0));   break;
+    case 'c': angle=angle.add(Vector3D( 0.0, 0.0, -1.0));   break;     
     }
-  std::cout << "Key: " << key << " Sun: " << sun << std::endl;
+  std::cout << "Rotation: " << angle << std::endl;
 }
 
 void paint(RoundObjectWithMass obj)
 {
-  double zoom=152200000.0;
-
   // store the current transformation matrix
   glPushMatrix();
 
   // do transformations
-  glTranslatef(obj.getPosition().getX()/zoom,obj.getPosition().getY()/zoom,obj.getPosition().getZ()/zoom);
+  glTranslatef(obj.getPosition().getX(),obj.getPosition().getY(),obj.getPosition().getZ());
   glColor3f(obj.getColor().getRedInPercent(), obj.getColor().getGreenInPercent(), obj.getColor().getBlueInPercent());
-  glutSolidSphere(obj.getRadius()/zoom, 30, 30);
+  glutSolidSphere(obj.getRadius(), 30, 30);
 
   // restore the previous transformation matrix
   glPopMatrix();
@@ -108,9 +114,23 @@ void display(void)
 
   glLoadIdentity ();
 
-  gluLookAt (camerapos.getX(), camerapos.getY(), camerapos.getZ(), camerapos.getX(), camerapos.getY(), camerapos.getZ()-5, 0.0, 1.0, 0.0);
+  /*
+  camera.satelliteObject(earth, earth_moon);
+  std::cout << camera  << std::endl;
+  */
 
-  glScalef (1.0, 2.0, 1.0);
+  gluLookAt (camera.getPosition().getX(), camera.getPosition().getY(), camera.getPosition().getZ(), camera.getLookAt().getX(), camera.getLookAt().getY(), camera.getLookAt().getZ(), 0.0, 1.0, 0.0);
+
+  // scale the universe so the objects appear smaller
+  glScalef ((float) scale.getX(), (float) scale.getY(), (float) scale.getZ());
+
+  ObjectWithMass& mycenter=earth;
+
+  glRotatef(angle.getX(), 0,1,0);
+  glRotatef(angle.getY(), 1,0,0);
+  glRotatef(angle.getZ(), 0,0,1);
+
+  glTranslatef(-mycenter.getPosition().getX(),-mycenter.getPosition().getY(),-mycenter.getPosition().getZ());
 
   solarsystem.updateSystem(100.0);
 

@@ -12,5 +12,5 @@ double RoundObjectWithMass::getRadius() const
 
 std::ostream& operator<<(std::ostream &strm, const RoundObjectWithMass &a)
 {
-  return strm << "Object: " << a.getName() << " Mass: " << a.getMass() << " Radius: " << a.getRadius() << " Pos: " << a.getPosition() << " Speed: " << a.getSpeed();
+  return strm << "Object: " << a.getName() << " Pos: " << a.getPosition() << " Speed: " << a.getSpeed() << " Mass: " << a.getMass() << " Radius: " << a.getRadius();
 }

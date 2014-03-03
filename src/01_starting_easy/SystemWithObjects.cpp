@@ -30,14 +30,9 @@ void SystemWithObjects::updateSystem(const int pTimePassed)
         }
       this->objects[i]->setAccelerationFromOutside(totalAcceleration);
       this->objects[i]->updatePosition(pTimePassed);
-      std::cout << *this->objects[i] << std::endl;
     }
 
-  /*
-  earth.updatePosition(100.0);
-  earth_moon.updatePosition(100.0);
-  sun.updatePosition(100.0);
-  */
+  std::cout << "Moon-earth distance: " << this->objects[0]->getPosition().sub(this->objects[1]->getPosition()).length()/1000.0 << " km" << " Moon speed: " << this->objects[1]->getSpeed().length()/1000.0 << " km/s" << std::endl;
 }
 
 std::ostream& operator<<(std::ostream &strm, const SystemWithObjects &a)
