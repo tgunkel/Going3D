@@ -40,7 +40,7 @@ void fillObjects()
   std::cout << "Acceleration sun:"    << sun.getGravityAcceleration(earth)  << std::endl;
   */
 
-  // solarsystem.addNewObject(&sun);
+  solarsystem.addNewObject(&sun);
   solarsystem.addNewObject(&earth);
   solarsystem.addNewObject(&earth_moon); 
 
