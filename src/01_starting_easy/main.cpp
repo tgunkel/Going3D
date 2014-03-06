@@ -7,6 +7,7 @@
 #include "Vector3D.h"
 #include "SystemWithObjects.h"
 #include "Camera.h"
+#include "WorldModelReaderNasa.h"
 
 RoundObjectWithMass sun  ("Sun",    1989000000000000000000000000000.0,   695500000.0, Vector3D(0,0.0,-149600000000.0),  RBGColor(255,255,  0));
 RoundObjectWithMass earth("Earth",          5972000000000000000000000.0,   6371000.0, Vector3D(0,0.0,0.0),              RBGColor(0,    0,255));
@@ -19,6 +20,9 @@ Vector3D scale(0.000000005, .000000005*2.0, 0.000000005);
 Camera camera(Vector3D(0,0,5), Vector3D(0,0,0));
 
 Vector3D angle(0,0,0);
+
+WorldModelReaderNasa wm=WorldModelReaderNasa();
+Tile* niceWorld;
 
 void fillObjects()
 {
@@ -52,7 +56,8 @@ void fillObjects()
   std::cout << "Acceleration moon:"    << earth_moon.getGravityAcceleration(earth)  << std::endl;
   */
 
-
+  wm.readFile();
+  //niceWorld=wm.getNiceWorld();
 }
 
 
