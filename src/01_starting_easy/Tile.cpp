@@ -2,6 +2,8 @@
 
 #include <GL/gl.h>
 #include <GL/glut.h>
+#include <iostream>
+
 
 Tile::Tile(const PlatteCarrePoint pUpperLeft, const PlatteCarrePoint pUpperRight, const PlatteCarrePoint pLowerLeft, const PlatteCarrePoint pLowerRight) : upperLeft(pUpperLeft), upperRight(pUpperRight), lowerLeft(pLowerLeft), lowerRight(pLowerRight)
 {
@@ -27,16 +29,18 @@ void Tile::FIXME_paint(const unsigned int pMaxX, const unsigned int pMaxY) const
       Vector3D ur=this->upperRight.get3DPoint(pMaxX, pMaxY);
       Vector3D ll=this->lowerLeft.get3DPoint  (pMaxX, pMaxY);
       Vector3D lr=this->lowerRight.get3DPoint(pMaxX, pMaxY);
-      
+
+      std::cout << "Triangles: " << ul << " " << ur << " " << ll << " " << lr << std::endl;
+
       glBegin(GL_TRIANGLES);
-      glColor3f(0.1, 0.2, 0.3);
+      glColor3f(1.0, 0.0, 0.5);
       glVertex3f(ul.getX(), ul.getY(), ul.getZ());
       glVertex3f(ur.getX(), ur.getY(), ur.getZ());
       glVertex3f(ll.getX(), ll.getY(), ll.getZ());
       glEnd();
       
       glBegin(GL_TRIANGLES);
-      glColor3f(0.1, 0.2, 0.3);
+      glColor3f(0.0, 0.5, 1.0);
       glVertex3f(ur.getX(), ur.getY(), ur.getZ());
       glVertex3f(ul.getX(), ul.getY(), ul.getZ());
       glVertex3f(lr.getX(), lr.getY(), lr.getZ());

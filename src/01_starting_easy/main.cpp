@@ -57,7 +57,7 @@ void fillObjects()
   */
 
   wm.readFile();
-  //niceWorld=wm.getNiceWorld();
+  niceWorld=wm.getNiceWorld();
 }
 
 
@@ -137,12 +137,16 @@ void display(void)
 
   glTranslatef(-mycenter.getPosition().getX(),-mycenter.getPosition().getY(),-mycenter.getPosition().getZ());
 
+  /*
   solarsystem.updateSystem(100.0);
 
   //  paint(sun,        0.0, 0.0, -12.0);
   paint(sun);
   paint(earth_moon);
   paint(earth);
+  */
+
+  niceWorld->FIXME_paint(86400,43200);
 
   glutSwapBuffers();
 
