@@ -20,7 +20,7 @@ class Tile
   void split(const unsigned int split_x, const unsigned int split_y);
 
   // debug method to paint us
-  void FIXME_paint(const unsigned int pMaxX, const unsigned int pMaxY) const;
+  void FIXME_paint(const double pZoomX, const double pZoomY, const double pZoomZ, const Vector3D pShift) const;
 
  protected:
 

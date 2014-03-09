@@ -15,7 +15,7 @@ class PlatteCarrePoint
   // constructor
   PlatteCarrePoint(const unsigned int pX, const unsigned int pY, const short pHeight);
 
-  Vector3D get3DPoint(const unsigned int pMaxX, const unsigned int pMaxY) const;
+  Vector3D get3DPoint4PlanePane(const double pZoomX, const double pZoomY, const double pZoomZ, const Vector3D pShift) const;
 
   short getHeight();
 

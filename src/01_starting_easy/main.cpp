@@ -19,7 +19,7 @@ Vector3D scale(0.000000005, .000000005*2.0, 0.000000005);
 
 Camera camera(Vector3D(0,0,5), Vector3D(0,0,0));
 
-Vector3D angle(0,0,0);
+Vector3D angle(0,-40,0);
 
 WorldModelReaderNasa wm=WorldModelReaderNasa();
 Tile* niceWorld;
@@ -137,16 +137,22 @@ void display(void)
 
   glTranslatef(-mycenter.getPosition().getX(),-mycenter.getPosition().getY(),-mycenter.getPosition().getZ());
 
-  /*
-  solarsystem.updateSystem(100.0);
+  /*  
+  //solarsystem.updateSystem(100.0);
 
-  //  paint(sun,        0.0, 0.0, -12.0);
+  // paint(sun,        0.0, 0.0, -12.0);
   paint(sun);
   paint(earth_moon);
   paint(earth);
   */
 
-  niceWorld->FIXME_paint(86400,43200);
+  const double max_value_x=86400.0;
+  const double max_value_y=43200.0;
+  const double max_value_z=10000.0;
+  const double max_paint_x=1058800000.0;
+  const double max_paint_y=max_paint_x*max_value_y/max_value_x;
+  const double max_paint_z=384400000.0;
+  niceWorld->FIXME_paint(max_paint_x/max_value_x, max_paint_y/max_value_y, max_paint_z/max_value_z, Vector3D(-max_paint_x/2.0, -max_paint_y/2.0, 0));
 
   glutSwapBuffers();
 
