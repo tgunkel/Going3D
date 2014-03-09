@@ -13,26 +13,12 @@ class Tile;
 class Tile
 {
  public:
-  // constructor
-  Tile(const PlatteCarrePoint pUpperLeft, const PlatteCarrePoint pUpperRight, const PlatteCarrePoint pLowerLeft, const PlatteCarrePoint pLowerRight);
-
-  // split the tile in 4 smaller ones and add them as childs of us
-  void split(const unsigned int split_x, const unsigned int split_y);
-
   // debug method to paint us
-  void FIXME_paint(const double pZoomX, const double pZoomY, const double pZoomZ, const Vector3D pShift) const;
+  virtual void FIXME_paint(const double pZoomX, const double pZoomY, const double pZoomZ, const Vector3D pShift) const=0;
 
  protected:
 
  private:
-  PlatteCarrePoint upperLeft, upperRight, lowerLeft, lowerRight;
-  Tile* zoom_upper_left;
-  Tile* zoom_upper_right;
-  Tile* zoom_lower_left;
-  Tile* zoom_lower_right;
 };
-
-// override the << operator
-std::ostream& operator<<(std::ostream &strm, const Vector3D &a);
 
 #endif

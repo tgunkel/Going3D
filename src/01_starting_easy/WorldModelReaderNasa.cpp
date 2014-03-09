@@ -81,11 +81,11 @@ void WorldModelReaderNasa::readFile()
 
 Tile* WorldModelReaderNasa::getNiceWorld()
 {
-  Tile* start=new Tile(this->readValue(0,          0),
-                       this->readValue(0,          this->rows),
-                       this->readValue(this->cols, 0),
-                       this->readValue(this->cols, this->rows)
-                      );
+  Tile_Real* start=new Tile_Real(this->readValue(0,          0),
+                                 this->readValue(0,          this->rows),
+                                 this->readValue(this->cols, 0),
+                                 this->readValue(this->cols, this->rows)
+                                 );
   return start;
 }
 

@@ -56,7 +56,7 @@ void fillObjects()
   std::cout << "Acceleration moon:"    << earth_moon.getGravityAcceleration(earth)  << std::endl;
   */
 
-  wm.readFile();
+  //wm.readFile();
   niceWorld=wm.getNiceWorld();
 }
 

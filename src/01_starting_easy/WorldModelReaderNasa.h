@@ -5,7 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include "PlatteCarrePoint.h"
-#include "Tile.h"
+#include "Tile_Real.h"
 
 /* This reads a 3D modell from a binary file
    See http://visibleearth.nasa.gov/view.php?id=73934 for the source of the file
