@@ -1,4 +1,5 @@
 #include "WorldModelReaderNasa.h"
+#include <cassert>
 
 WorldModelReaderNasa::WorldModelReaderNasa()
 {
@@ -29,30 +30,46 @@ bool WorldModelReaderNasa::isLittleEndian()
 
 PlatteCarrePoint WorldModelReaderNasa::readValue(const unsigned int pX, const unsigned int pY)
 {
-  char buffer[2];
-  unsigned char upper;
-  unsigned char lower;
+  if (this->nasaFile->is_open())
+  {
+    char buffer[2];
+    unsigned char upper;
+    unsigned char lower;
+    
+    unsigned long fpos=((unsigned long) 2 * (unsigned long) pX * (unsigned long) this->cols) + ((unsigned long) pY * (unsigned long) 2);
+    this->nasaFile->seekg(fpos, std::ios_base::beg);
+    this->nasaFile->read(buffer, 2);
 
-  unsigned long fpos=((unsigned long) 2 * (unsigned long) pX * (unsigned long) this->cols) + ((unsigned long) pY * (unsigned long) 2);
-  this->nasaFile->seekg(fpos);
-  this->nasaFile->read(buffer, 2);
-  
-  // depending of the endian of your system one of the bytes is upper and one lower
-  if(this->littleEndian)
-    {
-      upper=(unsigned char) buffer[0];
-      lower=(unsigned char) buffer[1];
-    }
+    if(this->nasaFile->eof())
+      {
+        std::cout << "Error: Hitting EOF at position: " << fpos << std::endl;
+        throw "EOF while reading file";
+      }
+    else
+      {
+        // depending of the endian of your system one of the bytes is upper and one lower
+        if(this->littleEndian)
+          {
+            upper=(unsigned char) buffer[0];
+            lower=(unsigned char) buffer[1];
+          }
+        else
+          {
+            upper=(unsigned char) buffer[1];
+            lower=(unsigned char) buffer[0];
+          }
+        
+        // move the upper up and leave the lower low
+        short value=((((short) upper << 8) + lower));
+        
+        return PlatteCarrePoint(pX, pY, value);
+      }
+  }
   else
-    {
-      upper=(unsigned char) buffer[1];
-      lower=(unsigned char) buffer[0];
-    }
-  
-  // move the upper up and leave the lower low
-  short value=((((short) upper << 8) + lower));
-
-  return PlatteCarrePoint(pX, pY, value);
+  {
+    std::cout << "Error: File not open" << std::endl;
+    throw "File not open error";
+  }
 }
 
 void WorldModelReaderNasa::readFile()
@@ -79,13 +96,86 @@ void WorldModelReaderNasa::readFile()
   }
 }
 
+
+Tile_Virtual* WorldModelReaderNasa::splitTile(Tile_Real* pTile, PlatteCarrePoint pSplitPos)
+{
+  // upper left tile
+  Tile* ul=new Tile_Real(this->readValue(pTile->getUpperLeft().getPcpX(),  pTile->getUpperLeft().getPcpY()),
+                         this->readValue(pTile->getUpperLeft().getPcpX(),  pSplitPos.getPcpY()),
+                         this->readValue(pSplitPos.getPcpX(),              pTile->getUpperLeft().getPcpY()),
+                         this->readValue(pSplitPos.getPcpX(),              pSplitPos.getPcpY())
+                         );
+  
+  // upper right tile
+  Tile* ur=new Tile_Real(this->readValue(pSplitPos.getPcpX(),              pTile->getUpperRight().getPcpY()),
+                         this->readValue(pSplitPos.getPcpX(),              pSplitPos.getPcpY()),
+                         this->readValue(pTile->getUpperRight().getPcpX(), pTile->getUpperRight().getPcpY()),
+                         this->readValue(pTile->getUpperRight().getPcpX(), pSplitPos.getPcpY())
+                         );
+  
+
+  // lower left tile
+  Tile* ll=new Tile_Real(this->readValue(pTile->getLowerLeft().getPcpX(),  pSplitPos.getPcpY()),
+                         this->readValue(pTile->getLowerLeft().getPcpX(),  pTile->getLowerLeft().getPcpY()),
+                         this->readValue(pSplitPos.getPcpX(),              pSplitPos.getPcpY()),
+                         this->readValue(pSplitPos.getPcpX(),              pTile->getLowerLeft().getPcpY())
+                         );
+  
+  // lower right tile
+  Tile* lr=new Tile_Real(this->readValue(pSplitPos.getPcpX(),              pSplitPos.getPcpY()),
+                         this->readValue(pSplitPos.getPcpX(),              pTile->getLowerRight().getPcpY()),
+                         this->readValue(pTile->getLowerRight().getPcpX(), pSplitPos.getPcpY()),
+                         this->readValue(pTile->getLowerRight().getPcpX(), pTile->getLowerRight().getPcpY())
+                         );
+
+  Tile_Virtual* result=new Tile_Virtual(ul, ur, ll, lr);
+  
+  std::cout << "Tile : " << *pTile << std::endl;
+  std::cout << "Split: " << pSplitPos << std::endl;
+  std::cout << "ul   : " << *ul << std::endl;
+  std::cout << "ur   : " << *ur << std::endl;
+  std::cout << "ll   : " << *ll << std::endl;
+  std::cout << "lr   : " << *lr << std::endl;
+
+  assert(ul->getUpperLeft() ==pTile->getUpperLeft());
+  assert(ur->getUpperRight()==pTile->getUpperRight());
+
+  return result;
+}
+
+
 Tile* WorldModelReaderNasa::getNiceWorld()
 {
-  Tile_Real* start=new Tile_Real(this->readValue(0,          0),
-                                 this->readValue(0,          this->rows),
-                                 this->readValue(this->cols, 0),
-                                 this->readValue(this->cols, this->rows)
+  Tile_Real *start=new Tile_Real(this->readValue(0,            0),
+                                 this->readValue(0,            this->cols-1),
+                                 this->readValue(this->rows-1, 0),
+                                 this->readValue(this->rows-1, this->cols-1)
                                  );
-  return start;
+  /*
+  double max_estimated_error=0;
+  unsigned int x=0,y=0;
+  short  h=0;
+
+  for(unsigned long cur_row=0; cur_row<this->rows; cur_row+=skip_rows)
+    {
+      for(unsigned long cur_col=0; cur_col<this->cols; cur_col+=skip_cols)
+        {
+          PlatteCarrePoint pcp=this->readValue(cur_row, cur_col);
+          if(pcp.getHeight()>max_estimated_error)
+            {
+              std::cout << "New max error: " << pcp << std::endl;
+              max_estimated_error=pcp.getHeight();
+              x=pcp.getPcpX();
+              y=pcp.getPcpY();              
+              h=pcp.getHeight();
+            }
+        }
+    }
+  */
+
+  PlatteCarrePoint max_error_point((this->rows-1)/2,(this->cols-1)/2,0);
+
+  Tile_Virtual* result=this->splitTile(start, max_error_point);
+  return result;
 }
 

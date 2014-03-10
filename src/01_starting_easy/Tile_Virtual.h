@@ -10,11 +10,19 @@
 /* Class to represent a tile in a 3D world
 
  */
-class Tile_Virtual : Tile
+class Tile_Virtual : public Tile
 {
  public:
   // constructor
   Tile_Virtual(Tile* pUpper_left, Tile* pUpper_right, Tile* pLower_left, Tile* pLower_right);
+
+  PlatteCarrePoint getUpperLeft() const;
+
+  PlatteCarrePoint getUpperRight() const;
+
+  PlatteCarrePoint getLowerRight() const;
+
+  PlatteCarrePoint getLowerLeft() const;
 
   // debug method to paint us
   void FIXME_paint(const double pZoomX, const double pZoomY, const double pZoomZ, const Vector3D pShift) const;

@@ -1,3 +1,6 @@
 #include "Tile.h"
 
-//void Tile::FIXME_paint(const double pZoomX, const double pZoomY, const double pZoomZ, const Vector3D pShift)=0 const;
+std::ostream& operator<<(std::ostream &strm, const Tile &a)
+{
+  return strm << "(" << a.getUpperLeft() << "/" << a.getUpperRight() << "/" << a.getLowerLeft() << "/" << a.getLowerRight() << ")";
+}

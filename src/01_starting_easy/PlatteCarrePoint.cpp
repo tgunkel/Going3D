@@ -7,7 +7,17 @@ PlatteCarrePoint::PlatteCarrePoint(const unsigned int pX, const unsigned int pY,
   this->height=pHeight;
 }
 
-short PlatteCarrePoint::getHeight()
+unsigned int PlatteCarrePoint::getPcpX() const
+{
+  return this->x;
+}
+
+unsigned int PlatteCarrePoint::getPcpY() const
+{
+  return this->y;
+}
+
+short PlatteCarrePoint::getHeight() const
 {
   return this->height;
 }
@@ -23,5 +33,14 @@ Vector3D PlatteCarrePoint::get3DPoint4PlanePane(const double pZoomX, const doubl
 
 std::ostream& operator<<(std::ostream &strm, const PlatteCarrePoint &a)
 {
-  return strm << "(" << a.x << "/" << a.y << "/" << a.height << ") ";
+  return strm << "(" << a.getPcpX() << "/" << a.getPcpY() << "/" << a.getHeight() << ") ";
+}
+
+bool PlatteCarrePoint::operator==(const PlatteCarrePoint& pOther)
+{
+  return (
+          this->getPcpX()==pOther.getPcpX() &&
+          this->getPcpY()==pOther.getPcpY() &&
+          this->getHeight()==pOther.getHeight()
+          );
 }

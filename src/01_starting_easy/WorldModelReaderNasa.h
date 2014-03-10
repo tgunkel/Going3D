@@ -6,6 +6,7 @@
 #include <fstream>
 #include "PlatteCarrePoint.h"
 #include "Tile_Real.h"
+#include "Tile_Virtual.h"
 
 /* This reads a 3D modell from a binary file
    See http://visibleearth.nasa.gov/view.php?id=73934 for the source of the file
@@ -25,6 +26,10 @@ class WorldModelReaderNasa
 
  private:
   void closeFile();
+
+  // Split this tile into 4 new ones and return a virtual one pointing to the generated one
+  Tile_Virtual* splitTile(Tile_Real* pTile, PlatteCarrePoint pSplitPos);
+
   std::ifstream* nasaFile;
 
 

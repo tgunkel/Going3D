@@ -17,7 +17,16 @@ class PlatteCarrePoint
 
   Vector3D get3DPoint4PlanePane(const double pZoomX, const double pZoomY, const double pZoomZ, const Vector3D pShift) const;
 
-  short getHeight();
+  // get the column in the row where this point lies
+  unsigned int getPcpX() const;
+
+  // get the row where this point lies
+  unsigned int getPcpY() const;
+
+  // get the value of this point in column / row
+  short getHeight() const;
+
+  bool operator==(const PlatteCarrePoint& pOther);
 
  private:
   unsigned int x, y;
