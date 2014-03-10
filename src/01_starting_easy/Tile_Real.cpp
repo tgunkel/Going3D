@@ -10,7 +10,7 @@ Tile_Real::Tile_Real(const PlatteCarrePoint pUpperLeft, const PlatteCarrePoint p
   lowerLeft(pLowerLeft), 
   lowerRight(pLowerRight)
 {
-  
+
 }
 
 void Tile_Real::FIXME_paint(const double pZoomX, const double pZoomY, const double pZoomZ, const Vector3D pShift) const
@@ -20,8 +20,6 @@ void Tile_Real::FIXME_paint(const double pZoomX, const double pZoomY, const doub
   Vector3D ll=this->lowerLeft.get3DPoint4PlanePane (pZoomX, pZoomY, pZoomZ, pShift);
   Vector3D lr=this->lowerRight.get3DPoint4PlanePane(pZoomX, pZoomY, pZoomZ, pShift);
   
-  //std::cout << "Triangles: " << ul << " " << ur << " " << ll << " " << lr << std::endl;
-  /*
   glBegin(GL_TRIANGLES);
   glColor3f(1.0, 1.0, 0.0);
   glVertex3f(ul.getX(), ul.getY(), ul.getZ());
@@ -34,21 +32,6 @@ void Tile_Real::FIXME_paint(const double pZoomX, const double pZoomY, const doub
   glVertex3f(ur.getX(), ur.getY(), ur.getZ());
   glVertex3f(ll.getX(), ll.getY(), ll.getZ());
   glVertex3f(lr.getX(), lr.getY(), lr.getZ());
-  glEnd();
-  */
-
-  glBegin(GL_TRIANGLES);
-  glColor3f(1.0, 1.0, 0.0);
-  glVertex3f(ul.getX(), ul.getY(), 0);
-  glVertex3f(ur.getX(), ur.getY(), 0);
-  glVertex3f(ll.getX(), ll.getY(), 0);
-  glEnd();
-  
-  glBegin(GL_TRIANGLES);
-  glColor3f(1.0, 0.0, 0.5);
-  glVertex3f(ur.getX(), ur.getY(), 0);
-  glVertex3f(ll.getX(), ll.getY(), 0);
-  glVertex3f(lr.getX(), lr.getY(), 0);
   glEnd();
 
 }
@@ -76,5 +59,5 @@ PlatteCarrePoint Tile_Real::getLowerLeft() const
 
 std::ostream& operator<<(std::ostream &strm, const Tile_Real &a)
 {
-  return strm << "Tile: " << a.getUpperLeft() << " " << a.getUpperRight() << " " << a.getLowerLeft() << " " << a.getLowerRight();
+  return strm << "Tile_Real ( UL:" << a.getUpperLeft() << "  LL: " << a.getLowerLeft() << " UR:" << a.getUpperRight() << "  LR:" << a.getLowerRight() << ")";
 }

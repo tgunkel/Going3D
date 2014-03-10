@@ -149,6 +149,11 @@ Tile_Virtual* WorldModelReaderNasa::splitTile(Tile_Real* pTile, PlatteCarrePoint
   assert(ll->getUpperRight()==pSplitPos);
   assert(lr->getUpperLeft() ==pSplitPos);
 
+  // match the border connect points
+  assert(ul->getUpperRight()==ur->getUpperLeft());
+  assert(ul->getLowerLeft()==ll->getUpperLeft());
+  assert(ll->getLowerRight()==lr->getLowerLeft());
+
   return result;
 }
 
@@ -156,11 +161,11 @@ Tile_Virtual* WorldModelReaderNasa::splitTile(Tile_Real* pTile, PlatteCarrePoint
 Tile* WorldModelReaderNasa::getNiceWorld()
 {
   Tile_Real *start=new Tile_Real(this->readValue(0,            0),
-                                 this->readValue(0,            this->rows-1),
                                  this->readValue(this->cols-1, 0),
+                                 this->readValue(0,            this->rows-1),
                                  this->readValue(this->cols-1, this->rows-1)
                                  );
-  /*
+
   double max_estimated_error=0;
   unsigned int x=0,y=0;
   short  h=0;
@@ -169,7 +174,7 @@ Tile* WorldModelReaderNasa::getNiceWorld()
     {
       for(unsigned long cur_col=0; cur_col<this->cols; cur_col+=skip_cols)
         {
-          PlatteCarrePoint pcp=this->readValue(cur_row, cur_col);
+          PlatteCarrePoint pcp=this->readValue(cur_col, cur_row);
           if(pcp.getHeight()>max_estimated_error)
             {
               std::cout << "New max error: " << pcp << std::endl;
@@ -180,9 +185,10 @@ Tile* WorldModelReaderNasa::getNiceWorld()
             }
         }
     }
-  */
 
-  PlatteCarrePoint max_error_point((this->cols-1)/2,(this->rows-1)/2,0);
+  //  x=(this->cols-1)/2;
+  //  y=(this->rows-1)/2;
+  PlatteCarrePoint max_error_point(x,y,h);
 
   Tile_Virtual* result=this->splitTile(start, max_error_point);
   return result;
