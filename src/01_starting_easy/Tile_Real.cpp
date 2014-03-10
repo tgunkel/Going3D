@@ -4,7 +4,11 @@
 
 #include "Tile_Real.h"
 
-Tile_Real::Tile_Real(const PlatteCarrePoint pUpperLeft, const PlatteCarrePoint pUpperRight, const PlatteCarrePoint pLowerLeft, const PlatteCarrePoint pLowerRight) : upperLeft(pUpperLeft), upperRight(pUpperRight), lowerLeft(pLowerLeft), lowerRight(pLowerRight)
+Tile_Real::Tile_Real(const PlatteCarrePoint pUpperLeft, const PlatteCarrePoint pUpperRight, const PlatteCarrePoint pLowerLeft, const PlatteCarrePoint pLowerRight) : 
+  upperLeft(pUpperLeft), 
+  upperRight(pUpperRight), 
+  lowerLeft(pLowerLeft), 
+  lowerRight(pLowerRight)
 {
   
 }
@@ -61,7 +65,7 @@ PlatteCarrePoint Tile_Real::getUpperRight() const
 
 PlatteCarrePoint Tile_Real::getLowerRight() const
 {
-  return this->lowerLeft;
+  return this->lowerRight;
 }
 
 PlatteCarrePoint Tile_Real::getLowerLeft() const

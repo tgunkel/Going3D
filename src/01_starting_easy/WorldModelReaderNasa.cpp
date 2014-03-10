@@ -36,7 +36,7 @@ PlatteCarrePoint WorldModelReaderNasa::readValue(const unsigned int pX, const un
     unsigned char upper;
     unsigned char lower;
     
-    unsigned long fpos=((unsigned long) 2 * (unsigned long) pX * (unsigned long) this->cols) + ((unsigned long) pY * (unsigned long) 2);
+    unsigned long fpos=((unsigned long) 2 * (unsigned long) pY * (unsigned long) this->cols) + ((unsigned long) pX * (unsigned long) 2);
     this->nasaFile->seekg(fpos, std::ios_base::beg);
     this->nasaFile->read(buffer, 2);
 
@@ -85,7 +85,7 @@ void WorldModelReaderNasa::readFile()
       {
         for(unsigned long cur_col=0; cur_col<this->cols; cur_col+=this->skip_cols)
           {
-            PlatteCarrePoint pcp=this->readValue(cur_row, cur_col);
+            PlatteCarrePoint pcp=this->readValue(cur_col, cur_row);
             if(pcp.getHeight()==0)
               std::cout << " " << " ";
             else
@@ -101,30 +101,30 @@ Tile_Virtual* WorldModelReaderNasa::splitTile(Tile_Real* pTile, PlatteCarrePoint
 {
   // upper left tile
   Tile* ul=new Tile_Real(this->readValue(pTile->getUpperLeft().getPcpX(),  pTile->getUpperLeft().getPcpY()),
-                         this->readValue(pTile->getUpperLeft().getPcpX(),  pSplitPos.getPcpY()),
                          this->readValue(pSplitPos.getPcpX(),              pTile->getUpperLeft().getPcpY()),
+                         this->readValue(pTile->getUpperLeft().getPcpX(),  pSplitPos.getPcpY()),
                          this->readValue(pSplitPos.getPcpX(),              pSplitPos.getPcpY())
                          );
   
   // upper right tile
   Tile* ur=new Tile_Real(this->readValue(pSplitPos.getPcpX(),              pTile->getUpperRight().getPcpY()),
-                         this->readValue(pSplitPos.getPcpX(),              pSplitPos.getPcpY()),
                          this->readValue(pTile->getUpperRight().getPcpX(), pTile->getUpperRight().getPcpY()),
+                         this->readValue(pSplitPos.getPcpX(),              pSplitPos.getPcpY()),
                          this->readValue(pTile->getUpperRight().getPcpX(), pSplitPos.getPcpY())
                          );
   
 
   // lower left tile
   Tile* ll=new Tile_Real(this->readValue(pTile->getLowerLeft().getPcpX(),  pSplitPos.getPcpY()),
-                         this->readValue(pTile->getLowerLeft().getPcpX(),  pTile->getLowerLeft().getPcpY()),
                          this->readValue(pSplitPos.getPcpX(),              pSplitPos.getPcpY()),
+                         this->readValue(pTile->getLowerLeft().getPcpX(),  pTile->getLowerLeft().getPcpY()),
                          this->readValue(pSplitPos.getPcpX(),              pTile->getLowerLeft().getPcpY())
                          );
   
   // lower right tile
   Tile* lr=new Tile_Real(this->readValue(pSplitPos.getPcpX(),              pSplitPos.getPcpY()),
-                         this->readValue(pSplitPos.getPcpX(),              pTile->getLowerRight().getPcpY()),
                          this->readValue(pTile->getLowerRight().getPcpX(), pSplitPos.getPcpY()),
+                         this->readValue(pSplitPos.getPcpX(),              pTile->getLowerRight().getPcpY()),
                          this->readValue(pTile->getLowerRight().getPcpX(), pTile->getLowerRight().getPcpY())
                          );
 
@@ -137,8 +137,17 @@ Tile_Virtual* WorldModelReaderNasa::splitTile(Tile_Real* pTile, PlatteCarrePoint
   std::cout << "ll   : " << *ll << std::endl;
   std::cout << "lr   : " << *lr << std::endl;
 
+  // match the original outer corners
   assert(ul->getUpperLeft() ==pTile->getUpperLeft());
   assert(ur->getUpperRight()==pTile->getUpperRight());
+  assert(ll->getLowerLeft() ==pTile->getLowerLeft());
+  assert(lr->getLowerRight()==pTile->getLowerRight());
+
+  // match the new center
+  assert(ul->getLowerRight()==pSplitPos);
+  assert(ur->getLowerLeft() ==pSplitPos);
+  assert(ll->getUpperRight()==pSplitPos);
+  assert(lr->getUpperLeft() ==pSplitPos);
 
   return result;
 }
@@ -147,9 +156,9 @@ Tile_Virtual* WorldModelReaderNasa::splitTile(Tile_Real* pTile, PlatteCarrePoint
 Tile* WorldModelReaderNasa::getNiceWorld()
 {
   Tile_Real *start=new Tile_Real(this->readValue(0,            0),
-                                 this->readValue(0,            this->cols-1),
-                                 this->readValue(this->rows-1, 0),
-                                 this->readValue(this->rows-1, this->cols-1)
+                                 this->readValue(0,            this->rows-1),
+                                 this->readValue(this->cols-1, 0),
+                                 this->readValue(this->cols-1, this->rows-1)
                                  );
   /*
   double max_estimated_error=0;
@@ -173,7 +182,7 @@ Tile* WorldModelReaderNasa::getNiceWorld()
     }
   */
 
-  PlatteCarrePoint max_error_point((this->rows-1)/2,(this->cols-1)/2,0);
+  PlatteCarrePoint max_error_point((this->cols-1)/2,(this->rows-1)/2,0);
 
   Tile_Virtual* result=this->splitTile(start, max_error_point);
   return result;

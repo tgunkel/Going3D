@@ -2,5 +2,5 @@
 
 std::ostream& operator<<(std::ostream &strm, const Tile &a)
 {
-  return strm << "(" << a.getUpperLeft() << "/" << a.getUpperRight() << "/" << a.getLowerLeft() << "/" << a.getLowerRight() << ")";
+  return strm << "( UL:" << a.getUpperLeft() << "  LL: " << a.getLowerLeft() << " UR:" << a.getUpperRight() << "  LR:" << a.getLowerRight() << ")";
 }
