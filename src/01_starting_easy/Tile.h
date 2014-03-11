@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <list>
+#include <cassert>
 #include "PlatteCarrePoint.h"
 
 class Tile;
@@ -20,6 +21,9 @@ class Tile
   virtual PlatteCarrePoint getLowerRight() const=0;
 
   virtual PlatteCarrePoint getLowerLeft() const=0;
+
+  // calculate an estimated value for a point within this tile
+  double getEstimatedValue(unsigned int x, unsigned int y) const;
 
   // debug method to paint us
   virtual void FIXME_paint(const double pZoomX, const double pZoomY, const double pZoomZ, const Vector3D pShift) const=0;
