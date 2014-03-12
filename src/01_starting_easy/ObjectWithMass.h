@@ -4,6 +4,7 @@
 #include "Vector3D.h"
 #include "RBGColor.h"
 
+/* A 3D object with a mass */
 class ObjectWithMass
 {
  public:

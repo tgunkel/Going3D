@@ -19,12 +19,16 @@ class Tile_Real : public Tile
   // debug method to paint us
   void FIXME_paint(const double pZoomX, const double pZoomY, const double pZoomZ, const Vector3D pShift) const;
 
+  // get the upper left point
   PlatteCarrePoint getUpperLeft() const;
 
+  // get the upper right point
   PlatteCarrePoint getUpperRight() const;
 
+  // get the lower right point
   PlatteCarrePoint getLowerRight() const;
 
+  // get the lower left point
   PlatteCarrePoint getLowerLeft() const;
 
   // estimate the value at this position based on the corner values we know

@@ -16,22 +16,31 @@ class Tile_Virtual : public Tile
   // constructor
   Tile_Virtual(Tile* pUpper_left, Tile* pUpper_right, Tile* pLower_left, Tile* pLower_right);
 
+  // get the upper left point (by asking our children)
   PlatteCarrePoint getUpperLeft() const;
 
+  // get the upper right point (by asking our children)
   PlatteCarrePoint getUpperRight() const;
 
+  // get the lower right point (by asking our children)
   PlatteCarrePoint getLowerRight() const;
 
+  // get the lower left point (by asking our children)
   PlatteCarrePoint getLowerLeft() const;
 
+  // get the upper left tile
   Tile* getUpperLeftTile() const;
 
+  // get the upper right tile
   Tile* getUpperRightTile() const;
 
+  // get the lower right tile
   Tile* getLowerRightTile() const;
 
+  // get the lower left tile
   Tile* getLowerLeftTile() const;
 
+  // replace this tile with another one
   void replaceTile(Tile * pNewTile, Tile * pOldTile);
 
   // debug method to paint us

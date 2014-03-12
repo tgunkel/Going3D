@@ -14,19 +14,25 @@ class Tile_Virtual;
 class Tile
 {
  public:
+  // constructor
   Tile();
 
+  // get the upper left point
   virtual PlatteCarrePoint getUpperLeft() const=0;
 
+  // get the upper right point
   virtual PlatteCarrePoint getUpperRight() const=0;
   
+  // get the lower right point
   virtual PlatteCarrePoint getLowerRight() const=0;
 
+  // get the lower left point
   virtual PlatteCarrePoint getLowerLeft() const=0;
 
   // get the parent Tile for you (must be a virtual one, real ones have no children as they are real
   Tile_Virtual* getParent() const;
 
+  // set the parent Tile for this Tile
   void setParent(Tile_Virtual* pParent);
 
   // calculate an estimated value for a point within this tile

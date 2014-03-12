@@ -18,13 +18,17 @@ class WorldModelReaderNasa
   // constructor
   WorldModelReaderNasa();
 
+  // read the whole file
   void readFile();
 
+  // read just one value from the file
   PlatteCarrePoint readValue(const unsigned int pX, const unsigned int pY);
 
+  // return a pointer to the first tile which represents the data in the file
   Tile* getNiceWorld();
 
  private:
+  // close the file
   void closeFile();
 
   // Split this tile into 4 new ones and return a virtual one pointing to the generated one
@@ -33,15 +37,19 @@ class WorldModelReaderNasa
   // returns the point of your tile where the error is max
   PlatteCarrePoint getPointInTileWithMaxError(Tile_Real start);
 
+  // the file object
   std::ifstream* nasaFile;
 
 
   // is your system little endian, e.g. all standard personal computers
   bool isLittleEndian();
+
+  // remember little endian status
   bool littleEndian;
   
   // this size of the file
   unsigned int cols, rows;
+
   unsigned int skip_cols, skip_rows;
 };
 
