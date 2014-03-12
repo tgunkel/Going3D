@@ -157,22 +157,15 @@ Tile_Virtual* WorldModelReaderNasa::splitTile(Tile_Real* pTile, PlatteCarrePoint
   return result;
 }
 
-
-Tile* WorldModelReaderNasa::getNiceWorld()
+PlatteCarrePoint WorldModelReaderNasa::getPointInTileWithMaxError(Tile_Real start)
 {
-  Tile_Real *start=new Tile_Real(this->readValue(0,            0),
-                                 this->readValue(this->cols-1, 0),
-                                 this->readValue(0,            this->rows-1),
-                                 this->readValue(this->cols-1, this->rows-1)
-                                 );
-
   double max_estimated_error=0;
   unsigned int x=0,y=0;
   short  h=0;
 
-  for(unsigned long cur_row=0; cur_row<this->rows; cur_row+=skip_rows)
+  for(unsigned long cur_row=0; cur_row<this->rows; cur_row+=50)
     {
-      for(unsigned long cur_col=0; cur_col<this->cols; cur_col+=skip_cols)
+      for(unsigned long cur_col=0; cur_col<this->cols; cur_col+=50)
         {
           PlatteCarrePoint pcp=this->readValue(cur_col, cur_row);
           if(pcp.getHeight()>max_estimated_error)
@@ -186,11 +179,24 @@ Tile* WorldModelReaderNasa::getNiceWorld()
         }
     }
 
-  //  x=(this->cols-1)/2;
-  //  y=(this->rows-1)/2;
-  PlatteCarrePoint max_error_point(x,y,h);
-
-  Tile_Virtual* result=this->splitTile(start, max_error_point);
+  PlatteCarrePoint result(x,y,h);
   return result;
+}
+
+Tile* WorldModelReaderNasa::getNiceWorld()
+{
+  Tile_Real *start=new Tile_Real(this->readValue(0,            0),
+                                 this->readValue(this->cols-1, 0),
+                                 this->readValue(0,            this->rows-1),
+                                 this->readValue(this->cols-1, this->rows-1)
+                                 );
+  PlatteCarrePoint max_error_point=this->getPointInTileWithMaxError(*start);
+ 
+  Tile_Virtual* head=this->splitTile(start, max_error_point);
+  Tile_Real* tg=(Tile_Real*) head->getUpperLeftTile();
+  PlatteCarrePoint sp=this->getPointInTileWithMaxError(*start);
+  tg->getParent()->replaceTile(this->splitTile(tg, sp), head->getUpperLeftTile());
+
+  return head;
 }
 

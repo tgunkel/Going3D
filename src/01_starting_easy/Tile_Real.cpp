@@ -5,6 +5,7 @@
 #include "Tile_Real.h"
 
 Tile_Real::Tile_Real(const PlatteCarrePoint pUpperLeft, const PlatteCarrePoint pUpperRight, const PlatteCarrePoint pLowerLeft, const PlatteCarrePoint pLowerRight) : 
+  Tile(),
   upperLeft(pUpperLeft), 
   upperRight(pUpperRight), 
   lowerLeft(pLowerLeft), 
@@ -54,7 +55,6 @@ PlatteCarrePoint Tile_Real::getLowerRight() const
 PlatteCarrePoint Tile_Real::getLowerLeft() const
 {
   return this->lowerLeft;
-
 }
 
 std::ostream& operator<<(std::ostream &strm, const Tile_Real &a)

@@ -6,7 +6,7 @@
 #include <cassert>
 #include "PlatteCarrePoint.h"
 
-class Tile;
+class Tile_Virtual;
 
 /* Class to represent a tile in a 3D world
 
@@ -14,6 +14,8 @@ class Tile;
 class Tile
 {
  public:
+  Tile();
+
   virtual PlatteCarrePoint getUpperLeft() const=0;
 
   virtual PlatteCarrePoint getUpperRight() const=0;
@@ -21,6 +23,11 @@ class Tile
   virtual PlatteCarrePoint getLowerRight() const=0;
 
   virtual PlatteCarrePoint getLowerLeft() const=0;
+
+  // get the parent Tile for you (must be a virtual one, real ones have no children as they are real
+  Tile_Virtual* getParent() const;
+
+  void setParent(Tile_Virtual* pParent);
 
   // calculate an estimated value for a point within this tile
   double getEstimatedValue(unsigned int x, unsigned int y) const;
@@ -31,6 +38,8 @@ class Tile
  protected:
 
  private:
+  Tile_Virtual * parent;
+
   // override the << operator
   friend std::ostream& operator<<(std::ostream &strm, const Tile &a);
 

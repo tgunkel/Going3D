@@ -24,6 +24,16 @@ class Tile_Virtual : public Tile
 
   PlatteCarrePoint getLowerLeft() const;
 
+  Tile* getUpperLeftTile() const;
+
+  Tile* getUpperRightTile() const;
+
+  Tile* getLowerRightTile() const;
+
+  Tile* getLowerLeftTile() const;
+
+  void replaceTile(Tile * pNewTile, Tile * pOldTile);
+
   // debug method to paint us
   void FIXME_paint(const double pZoomX, const double pZoomY, const double pZoomZ, const Vector3D pShift) const;
 

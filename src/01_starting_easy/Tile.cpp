@@ -1,5 +1,20 @@
 #include "Tile.h"
 
+Tile::Tile()
+{
+  this->parent=NULL;
+}
+
+Tile_Virtual* Tile::getParent() const
+{
+  return this->parent;
+}
+
+void Tile::setParent(Tile_Virtual* pParent)
+{
+  this->parent=pParent;
+}
+
 double Tile::getEstimatedValue(unsigned int x, unsigned int y) const
 {
   // calculate to what percentage your point is to the right or down side of this Tile
@@ -7,7 +22,7 @@ double Tile::getEstimatedValue(unsigned int x, unsigned int y) const
   double downInPercent= (y-getUpperLeft().getPcpY())/(getUpperLeft().getPcpY()-getLowerLeft().getPcpY());
 
   assert(rightInPercent>=0 && rightInPercent<=1);
-  assert(leftInPercent>=0  && leftInPercent<=1);
+  assert(downInPercent>=0  && downInPercent<=1);
 
   // the more your point is to one corner, the more do we count that corner in
   double lr_est=((double)getLowerRight().getHeight())*   rightInPercent *   downInPercent;

@@ -30,6 +30,9 @@ class WorldModelReaderNasa
   // Split this tile into 4 new ones and return a virtual one pointing to the generated one
   Tile_Virtual* splitTile(Tile_Real* pTile, PlatteCarrePoint pSplitPos);
 
+  // returns the point of your tile where the error is max
+  PlatteCarrePoint getPointInTileWithMaxError(Tile_Real start);
+
   std::ifstream* nasaFile;
 
 

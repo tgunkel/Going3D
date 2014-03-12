@@ -34,6 +34,7 @@ class Tile_Real : public Tile
 
  private:
   PlatteCarrePoint upperLeft, upperRight, lowerLeft, lowerRight;
+  Tile_Real * parent;
 };
 
 // override the << operator
