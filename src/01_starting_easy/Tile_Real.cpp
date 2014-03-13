@@ -23,16 +23,16 @@ void Tile_Real::FIXME_paint(const double pZoomX, const double pZoomY, const doub
   
   glBegin(GL_TRIANGLES);
   glColor3f(1.0, 1.0, 0.0);
-  glVertex3f(ul.getX(), ul.getY(), ul.getZ());
-  glVertex3f(ur.getX(), ur.getY(), ur.getZ());
-  glVertex3f(ll.getX(), ll.getY(), ll.getZ());
+  glVertex3f(ul.getX(), ul.getY(), -ul.getZ());
+  glVertex3f(ur.getX(), ur.getY(), -ur.getZ());
+  glVertex3f(ll.getX(), ll.getY(), -ll.getZ());
   glEnd();
   
   glBegin(GL_TRIANGLES);
   glColor3f(1.0, 0.0, 0.5);
-  glVertex3f(ur.getX(), ur.getY(), ur.getZ());
-  glVertex3f(ll.getX(), ll.getY(), ll.getZ());
-  glVertex3f(lr.getX(), lr.getY(), lr.getZ());
+  glVertex3f(ur.getX(), ur.getY(), -ur.getZ());
+  glVertex3f(ll.getX(), ll.getY(), -ll.getZ());
+  glVertex3f(lr.getX(), lr.getY(), -lr.getZ());
   glEnd();
 
 }

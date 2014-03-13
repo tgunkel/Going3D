@@ -18,8 +18,8 @@ void Tile::setParent(Tile_Virtual* pParent)
 double Tile::getEstimatedValue(unsigned int x, unsigned int y) const
 {
   // calculate to what percentage your point is to the right or down side of this Tile
-  double rightInPercent=(x-getUpperLeft().getPcpX())/(getUpperRight().getPcpX()-getUpperLeft().getPcpX());
-  double downInPercent= (y-getUpperLeft().getPcpY())/(getUpperLeft().getPcpY()-getLowerLeft().getPcpY());
+  double rightInPercent=(x-getUpperLeft().getPcpX())/(double)(getUpperRight().getPcpX()-getUpperLeft().getPcpX());
+  double downInPercent= (y-getUpperLeft().getPcpY())/(double)(getUpperLeft().getPcpY()-getLowerLeft().getPcpY());
 
   assert(rightInPercent>=0 && rightInPercent<=1);
   assert(downInPercent>=0  && downInPercent<=1);
@@ -32,6 +32,9 @@ double Tile::getEstimatedValue(unsigned int x, unsigned int y) const
 
   // form average
   double res=(lr_est+ul_est+ur_est+ll_est)/4.0;
+
+  // std::cout << "Estimated value: for " << x << "/" << y << " right: " << rightInPercent << " down: " << downInPercent << " res: " << res << std::endl;
+
   return res;
 }
 

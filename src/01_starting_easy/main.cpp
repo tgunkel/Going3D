@@ -19,7 +19,7 @@ Vector3D scale(0.000000005, .000000005*2.0, 0.000000005);
 
 Camera camera(Vector3D(0,0,5), Vector3D(0,0,0));
 
-Vector3D angle(0,-40,0);
+Vector3D angle(0,-220,0);
 
 WorldModelReaderNasa wm=WorldModelReaderNasa();
 Tile* niceWorld;

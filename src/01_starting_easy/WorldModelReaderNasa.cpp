@@ -1,5 +1,6 @@
 #include "WorldModelReaderNasa.h"
 #include <cassert>
+#include <cmath>
 
 WorldModelReaderNasa::WorldModelReaderNasa()
 {
@@ -129,13 +130,15 @@ Tile_Virtual* WorldModelReaderNasa::splitTile(Tile_Real* pTile, PlatteCarrePoint
                          );
 
   Tile_Virtual* result=new Tile_Virtual(ul, ur, ll, lr);
-  
+
+  /*  
   std::cout << "Tile : " << *pTile << std::endl;
   std::cout << "Split: " << pSplitPos << std::endl;
   std::cout << "ul   : " << *ul << std::endl;
   std::cout << "ur   : " << *ur << std::endl;
   std::cout << "ll   : " << *ll << std::endl;
   std::cout << "lr   : " << *lr << std::endl;
+  */
 
   // match the original outer corners
   assert(ul->getUpperLeft() ==pTile->getUpperLeft());
@@ -157,30 +160,50 @@ Tile_Virtual* WorldModelReaderNasa::splitTile(Tile_Real* pTile, PlatteCarrePoint
   return result;
 }
 
-PlatteCarrePoint WorldModelReaderNasa::getPointInTileWithMaxError(Tile_Real start)
+PlatteCarrePoint WorldModelReaderNasa::getPointInTileWithMaxError(Tile_Real* pTile)
 {
   double max_estimated_error=0;
   unsigned int x=0,y=0;
   short  h=0;
 
-  for(unsigned long cur_row=0; cur_row<this->rows; cur_row+=50)
+  for(unsigned long cur_row=pTile->getUpperLeft().getPcpY(); cur_row<pTile->getLowerLeft().getPcpY(); cur_row+=50)
     {
-      for(unsigned long cur_col=0; cur_col<this->cols; cur_col+=50)
+      for(unsigned long cur_col=pTile->getUpperLeft().getPcpX(); cur_col<pTile->getUpperRight().getPcpX(); cur_col+=50)
         {
           PlatteCarrePoint pcp=this->readValue(cur_col, cur_row);
-          if(pcp.getHeight()>max_estimated_error)
+          double current_error=std::abs(pcp.getHeight()-pTile->getEstimatedValue(cur_col, cur_row));
+          if(current_error>max_estimated_error)
             {
-              std::cout << "New max error: " << pcp << std::endl;
-              max_estimated_error=pcp.getHeight();
+              //std::cout << "New max error: " << pcp << " " << current_error << std::endl;
+              max_estimated_error=current_error;
               x=pcp.getPcpX();
               y=pcp.getPcpY();              
               h=pcp.getHeight();
             }
         }
     }
-
   PlatteCarrePoint result(x,y,h);
+
+  std::cout << "Max error for " << *pTile << " found at " << result << " with estimated value " <<  pTile->getEstimatedValue(result.getPcpX(), result.getPcpX()) << std::endl;
+
   return result;
+    }
+        
+Tile_Virtual* WorldModelReaderNasa::splitTile(Tile_Real* pTile)
+{
+  // first find place where your tile has the biggest difference to the true value
+  PlatteCarrePoint max_error_point=this->getPointInTileWithMaxError(pTile);
+
+  // next split the tile at this point into 4 new ones
+  Tile_Virtual* new_head=this->splitTile(pTile, max_error_point);
+
+  // now replace us at our father
+  Tile_Virtual* father=pTile->getParent();
+  if(father!=NULL)
+    {
+      father->replaceTile(new_head, pTile);
+    }
+  return new_head;
 }
 
 Tile* WorldModelReaderNasa::getNiceWorld()
@@ -190,13 +213,30 @@ Tile* WorldModelReaderNasa::getNiceWorld()
                                  this->readValue(0,            this->rows-1),
                                  this->readValue(this->cols-1, this->rows-1)
                                  );
-  PlatteCarrePoint max_error_point=this->getPointInTileWithMaxError(*start);
- 
-  Tile_Virtual* head=this->splitTile(start, max_error_point);
-  Tile_Real* tg=(Tile_Real*) head->getUpperLeftTile();
-  PlatteCarrePoint sp=this->getPointInTileWithMaxError(*start);
-  tg->getParent()->replaceTile(this->splitTile(tg, sp), head->getUpperLeftTile());
 
-  return head;
+  Tile_Virtual* result;
+  result=splitTile(start);
+  Tile_Real* next;
+
+  next=(Tile_Real*) result->getLowerRightTile();
+  splitTile(next);
+
+  next=(Tile_Real*) result->getUpperRightTile();
+  splitTile(next);
+
+  next=(Tile_Real*) result->getUpperLeftTile();
+  splitTile(next);
+
+  next=(Tile_Real*) result->getLowerLeftTile();
+  splitTile(next);
+
+  //PlatteCarrePoint max_error_point=this->getPointInTileWithMaxError(start);
+
+  //Tile_Virtual* head=this->splitTile(start, max_error_point);
+  //Tile_Real* tg=(Tile_Real*) head->getUpperLeftTile();
+  //PlatteCarrePoint sp=this->getPointInTileWithMaxError(tg);
+  //tg->getParent()->replaceTile(this->splitTile(tg, sp), head->getUpperLeftTile());
+
+  return result;
 }
 
