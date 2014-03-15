@@ -82,8 +82,10 @@ void Tile_Virtual::FIXME_paint(const double pZoomX, const double pZoomY, const d
 }
 
 
-void Tile_Virtual::getAllPointsOnAxis(std::set<PlatteCarrePoint> pResult, bool pXAxis, const PlatteCarrePoint& pFrom, const PlatteCarrePoint& pTo) const
+void Tile_Virtual::getAllPointsOnAxis(std::set<PlatteCarrePoint>& pResult, bool pXAxis, const PlatteCarrePoint& pFrom, const PlatteCarrePoint& pTo) const
 {
+  std::cout << "Searching in " << *this << " on X-Axis " << pXAxis << " " << pFrom << " " << pTo << std::endl;
+
   if(pXAxis)
     {
       assert(pFrom.getPcpY()==pTo.getPcpY());

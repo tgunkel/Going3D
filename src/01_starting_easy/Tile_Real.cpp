@@ -57,19 +57,33 @@ const PlatteCarrePoint& Tile_Real::getLowerLeft() const
   return this->lowerLeft;
 }
 
-void Tile_Real::getAllPointsOnAxis(std::set<PlatteCarrePoint> pResult, bool pXAxis, const PlatteCarrePoint& pFrom, const PlatteCarrePoint& pTo) const
+void Tile_Real::getAllPointsOnAxis(std::set<PlatteCarrePoint>& pResult, bool pXAxis, const PlatteCarrePoint& pFrom, const PlatteCarrePoint& pTo) const
 { 
+  std::cout << "Searching in " << *this << " on X-Axis " << pXAxis << " " << pFrom << " " << pTo << std::endl;
+
   if(this->getUpperLeft().isBetween(pXAxis,  pFrom, pTo))
-    pResult.insert(this->getUpperLeft());
+    {
+      std::cout << "Hit " << this->getUpperLeft() << std::endl;      
+      pResult.insert(this->getUpperLeft());
+    }
 
   if(this->getUpperRight().isBetween(pXAxis, pFrom, pTo))
-    pResult.insert(this->getUpperRight());
+    {
+      std::cout << "Hit " << this->getUpperRight() << std::endl;      
+      pResult.insert(this->getUpperRight());
+    }
 
   if(this->getLowerLeft().isBetween(pXAxis,  pFrom, pTo))
-    pResult.insert(this->getLowerLeft());
+    {
+      std::cout << "Hit " << this->getLowerLeft() << std::endl;      
+      pResult.insert(this->getLowerLeft());
+    }
 
   if(this->getLowerRight().isBetween(pXAxis, pFrom, pTo))
-    pResult.insert(this->getLowerRight());
+    {
+      std::cout << "Hit " << this->getLowerRight() << std::endl;      
+      pResult.insert(this->getLowerRight());
+    }
 }
 
 std::ostream& operator<<(std::ostream &strm, const Tile_Real &a)

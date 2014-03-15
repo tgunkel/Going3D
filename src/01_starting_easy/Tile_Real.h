@@ -35,7 +35,7 @@ class Tile_Real : public Tile
   PlatteCarrePoint getEstimated(PlatteCarrePoint pPoint) const;
 
   // you have two points, pFrom and pTo, which are both on the same axis (see pXaxis) and you want to find all point which are on that axis and between both point
-  void getAllPointsOnAxis(std::set<PlatteCarrePoint> pResult, bool pXAxis, const PlatteCarrePoint& pFrom, const PlatteCarrePoint& pTo) const;
+  void getAllPointsOnAxis(std::set<PlatteCarrePoint>& pResult, bool pXAxis, const PlatteCarrePoint& pFrom, const PlatteCarrePoint& pTo) const;
 
  protected:
 

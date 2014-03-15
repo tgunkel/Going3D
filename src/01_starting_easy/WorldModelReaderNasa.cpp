@@ -242,8 +242,14 @@ Tile* WorldModelReaderNasa::getNiceWorld()
 
   std::set<PlatteCarrePoint> oergs;
   result->getAllPointsOnAxis(oergs, false, lr->getUpperLeft(), lr->getLowerLeft());
-  //std::cout << "Points left of LR" << oergs << std::endl;
 
+  std::cout << "Points left of LR" << std::endl;
+
+  std::set<PlatteCarrePoint>::iterator it;
+  for (it = oergs.begin(); it != oergs.end(); ++it)
+    {
+      std::cout << *it << std::endl;
+    }
 
 
   //PlatteCarrePoint max_error_point=this->getPointInTileWithMaxError(start);
