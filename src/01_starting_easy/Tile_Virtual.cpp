@@ -131,3 +131,9 @@ void Tile_Virtual::getAllPointsOnAxis(std::set<PlatteCarrePoint> pResult, bool p
   zoom_lower_left ->getAllPointsOnAxis(pResult, pXAxis, pFrom, pTo);
   zoom_lower_right->getAllPointsOnAxis(pResult, pXAxis, pFrom, pTo);
 }
+
+
+std::ostream&  operator<<(std::ostream &strm, const Tile_Virtual &a)
+{
+    return strm << "(VUL:" << a.getUpperLeft() << "  LL: " << a.getLowerLeft() << " UR:" << a.getUpperRight() << "  LR:" << a.getLowerRight() << ")";
+}

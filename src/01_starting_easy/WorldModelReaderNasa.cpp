@@ -216,19 +216,25 @@ Tile* WorldModelReaderNasa::getNiceWorld()
 
   Tile_Virtual* result;
   result=splitTile(start);
-  Tile_Real* next;
 
-  next=(Tile_Real*) result->getLowerRightTile();
-  splitTile(next);
+  Tile_Real* lr;
+  Tile_Real* ur;
+  Tile_Real* ul;
+  Tile_Real* ll;
 
-  next=(Tile_Real*) result->getUpperRightTile();
-  splitTile(next);
+  lr=(Tile_Real*) result->getLowerRightTile();
+  splitTile(lr);
 
-  next=(Tile_Real*) result->getUpperLeftTile();
-  splitTile(next);
+  ur=(Tile_Real*) result->getUpperRightTile();
+  splitTile(ur);
 
-  next=(Tile_Real*) result->getLowerLeftTile();
-  splitTile(next);
+  ul=(Tile_Real*) result->getUpperLeftTile();
+  splitTile(ul);
+
+  ll=(Tile_Real*) result->getLowerLeftTile();
+  splitTile(ll);
+
+  std::cout << "This is the head" << *result << std::endl;
 
   //PlatteCarrePoint max_error_point=this->getPointInTileWithMaxError(start);
 
