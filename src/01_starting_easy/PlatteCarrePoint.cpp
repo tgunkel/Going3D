@@ -36,7 +36,7 @@ std::ostream& operator<<(std::ostream &strm, const PlatteCarrePoint &a)
   return strm << "(" << a.getPcpX() << "/" << a.getPcpY() << "/" << a.getHeight() << ") ";
 }
 
-bool PlatteCarrePoint::isBetween(bool pXAxis, PlatteCarrePoint& pFrom, PlatteCarrePoint& pTo) const
+bool PlatteCarrePoint::isBetween(bool pXAxis, const PlatteCarrePoint& pFrom, const PlatteCarrePoint& pTo) const
 {
   // should we check vs the X axis?
   if(pXAxis)

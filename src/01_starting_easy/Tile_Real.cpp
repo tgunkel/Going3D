@@ -23,16 +23,16 @@ void Tile_Real::FIXME_paint(const double pZoomX, const double pZoomY, const doub
   
   glBegin(GL_TRIANGLES);
   glColor3f(1.0, 1.0, 1.0);
-  glVertex3f(ul.getX(), ul.getY(), -ul.getZ());
-  glVertex3f(ur.getX(), ur.getY(), -ur.getZ());
-  glVertex3f(ll.getX(), ll.getY(), -ll.getZ());
+  glVertex3f(ul.getX(), ul.getY(), -ul.getZ()/5.0);
+  glVertex3f(ur.getX(), ur.getY(), -ur.getZ()/5.0);
+  glVertex3f(ll.getX(), ll.getY(), -ll.getZ()/5.0);
   glEnd();
   
   glBegin(GL_TRIANGLES);
   glColor3f(1.0, 0.0, 1.0);
-  glVertex3f(ur.getX(), ur.getY(), -ur.getZ());
-  glVertex3f(ll.getX(), ll.getY(), -ll.getZ());
-  glVertex3f(lr.getX(), lr.getY(), -lr.getZ());
+  glVertex3f(ur.getX(), ur.getY(), -ur.getZ()/5.0);
+  glVertex3f(ll.getX(), ll.getY(), -ll.getZ()/5.0);
+  glVertex3f(lr.getX(), lr.getY(), -lr.getZ()/5.0);
   glEnd();
 
 }
@@ -57,7 +57,7 @@ const PlatteCarrePoint& Tile_Real::getLowerLeft() const
   return this->lowerLeft;
 }
 
-void Tile_Real::getAllPointsOnAxis(std::set<PlatteCarrePoint> pResult, bool pXAxis, PlatteCarrePoint& pFrom, PlatteCarrePoint& pTo) const
+void Tile_Real::getAllPointsOnAxis(std::set<PlatteCarrePoint> pResult, bool pXAxis, const PlatteCarrePoint& pFrom, const PlatteCarrePoint& pTo) const
 { 
   if(this->getUpperLeft().isBetween(pXAxis,  pFrom, pTo))
     pResult.insert(this->getUpperLeft());

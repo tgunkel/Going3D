@@ -223,18 +223,28 @@ Tile* WorldModelReaderNasa::getNiceWorld()
   Tile_Real* ll;
 
   lr=(Tile_Real*) result->getLowerRightTile();
-  splitTile(lr);
+  //splitTile(lr);
 
   ur=(Tile_Real*) result->getUpperRightTile();
-  splitTile(ur);
+  //splitTile(ur);
 
   ul=(Tile_Real*) result->getUpperLeftTile();
-  splitTile(ul);
+  //splitTile(ul);
 
   ll=(Tile_Real*) result->getLowerLeftTile();
   splitTile(ll);
 
   std::cout << "This is the head" << *result << std::endl;
+  std::cout << "This is UL"       << *result->getUpperLeftTile() << std::endl;
+  std::cout << "This is UR"       << *result->getUpperRightTile() << std::endl;
+  std::cout << "This is LL"       << *result->getLowerLeftTile() << std::endl;
+  std::cout << "This is LR"       << *result->getLowerRightTile() << std::endl;
+
+  std::set<PlatteCarrePoint> oergs;
+  result->getAllPointsOnAxis(oergs, false, lr->getUpperLeft(), lr->getLowerLeft());
+  //std::cout << "Points left of LR" << oergs << std::endl;
+
+
 
   //PlatteCarrePoint max_error_point=this->getPointInTileWithMaxError(start);
 
