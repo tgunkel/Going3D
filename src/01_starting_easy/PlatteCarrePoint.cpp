@@ -64,15 +64,15 @@ bool PlatteCarrePoint::operator <(const PlatteCarrePoint& pOther) const
 {
   if(pOther.getPcpX()!=this->getPcpX())
     {
-      return (pOther.getPcpX()<this->getPcpX());
+      return (this->getPcpX()<pOther.getPcpX());
     }
   else if(pOther.getPcpX()!=this->getPcpX())
     {
-      return (pOther.getPcpY()<this->getPcpY());
+      return (this->getPcpY()<pOther.getPcpY());
     }
   else
     {
-      return (pOther.getHeight()<this->getHeight());
+      return (this->getHeight()<pOther.getHeight());
     }
 }
 
