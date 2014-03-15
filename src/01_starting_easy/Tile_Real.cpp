@@ -22,14 +22,14 @@ void Tile_Real::FIXME_paint(const double pZoomX, const double pZoomY, const doub
   Vector3D lr=this->lowerRight.get3DPoint4PlanePane(pZoomX, pZoomY, pZoomZ, pShift);
   
   glBegin(GL_TRIANGLES);
-  glColor3f(1.0, 1.0, 0.0);
+  glColor3f(1.0, 1.0, 1.0);
   glVertex3f(ul.getX(), ul.getY(), -ul.getZ());
   glVertex3f(ur.getX(), ur.getY(), -ur.getZ());
   glVertex3f(ll.getX(), ll.getY(), -ll.getZ());
   glEnd();
   
   glBegin(GL_TRIANGLES);
-  glColor3f(1.0, 0.0, 0.5);
+  glColor3f(1.0, 0.0, 1.0);
   glVertex3f(ur.getX(), ur.getY(), -ur.getZ());
   glVertex3f(ll.getX(), ll.getY(), -ll.getZ());
   glVertex3f(lr.getX(), lr.getY(), -lr.getZ());
@@ -37,24 +37,39 @@ void Tile_Real::FIXME_paint(const double pZoomX, const double pZoomY, const doub
 
 }
 
-PlatteCarrePoint Tile_Real::getUpperLeft() const
+const PlatteCarrePoint& Tile_Real::getUpperLeft() const
 {
   return this->upperLeft;
 }
 
-PlatteCarrePoint Tile_Real::getUpperRight() const
+const PlatteCarrePoint& Tile_Real::getUpperRight() const
 {
   return this->upperRight;
 }
 
-PlatteCarrePoint Tile_Real::getLowerRight() const
+const PlatteCarrePoint& Tile_Real::getLowerRight() const
 {
   return this->lowerRight;
 }
 
-PlatteCarrePoint Tile_Real::getLowerLeft() const
+const PlatteCarrePoint& Tile_Real::getLowerLeft() const
 {
   return this->lowerLeft;
+}
+
+void Tile_Real::getAllPointsOnAxis(std::set<PlatteCarrePoint> pResult, bool pXAxis, PlatteCarrePoint& pFrom, PlatteCarrePoint& pTo) const
+{ 
+  if(this->getUpperLeft().isBetween(pXAxis,  pFrom, pTo))
+    pResult.insert(this->getUpperLeft());
+
+  if(this->getUpperRight().isBetween(pXAxis, pFrom, pTo))
+    pResult.insert(this->getUpperRight());
+
+  if(this->getLowerLeft().isBetween(pXAxis,  pFrom, pTo))
+    pResult.insert(this->getLowerLeft());
+
+  if(this->getLowerRight().isBetween(pXAxis, pFrom, pTo))
+    pResult.insert(this->getLowerRight());
 }
 
 std::ostream& operator<<(std::ostream &strm, const Tile_Real &a)

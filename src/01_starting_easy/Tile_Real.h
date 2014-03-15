@@ -20,19 +20,22 @@ class Tile_Real : public Tile
   void FIXME_paint(const double pZoomX, const double pZoomY, const double pZoomZ, const Vector3D pShift) const;
 
   // get the upper left point
-  PlatteCarrePoint getUpperLeft() const;
+  const PlatteCarrePoint& getUpperLeft() const;
 
   // get the upper right point
-  PlatteCarrePoint getUpperRight() const;
+  const PlatteCarrePoint& getUpperRight() const;
 
   // get the lower right point
-  PlatteCarrePoint getLowerRight() const;
+  const PlatteCarrePoint& getLowerRight() const;
 
   // get the lower left point
-  PlatteCarrePoint getLowerLeft() const;
+  const PlatteCarrePoint& getLowerLeft() const;
 
   // estimate the value at this position based on the corner values we know
   PlatteCarrePoint getEstimated(PlatteCarrePoint pPoint) const;
+
+  // you have two points, pFrom and pTo, which are both on the same axis (see pXaxis) and you want to find all point which are on that axis and between both point
+  void getAllPointsOnAxis(std::set<PlatteCarrePoint> pResult, bool pXAxis, PlatteCarrePoint& pFrom, PlatteCarrePoint& pTo) const;
 
  protected:
 

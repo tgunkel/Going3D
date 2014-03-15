@@ -17,22 +17,22 @@ Tile_Virtual::Tile_Virtual(Tile* pUpper_left, Tile* pUpper_right, Tile* pLower_l
   this->zoom_lower_right->setParent(this);
 }
 
-PlatteCarrePoint Tile_Virtual::getUpperLeft() const
+const PlatteCarrePoint& Tile_Virtual::getUpperLeft() const
 {
   return this->zoom_upper_left->getUpperLeft();
 }
 
-PlatteCarrePoint Tile_Virtual::getUpperRight() const
+const PlatteCarrePoint& Tile_Virtual::getUpperRight() const
 {
   return this->zoom_upper_right->getUpperRight();
 }
 
-PlatteCarrePoint Tile_Virtual::getLowerRight() const
+const PlatteCarrePoint& Tile_Virtual::getLowerRight() const
 {
   return this->zoom_lower_right->getLowerRight();
 }
 
-PlatteCarrePoint Tile_Virtual::getLowerLeft() const
+const PlatteCarrePoint& Tile_Virtual::getLowerLeft() const
 {
   return this->zoom_lower_left->getLowerLeft();
 }
@@ -79,4 +79,55 @@ void Tile_Virtual::FIXME_paint(const double pZoomX, const double pZoomY, const d
       zoom_lower_left ->FIXME_paint(pZoomX, pZoomY, pZoomZ, pShift);
       zoom_lower_right->FIXME_paint(pZoomX, pZoomY, pZoomZ, pShift);
     }
+}
+
+
+void Tile_Virtual::getAllPointsOnAxis(std::set<PlatteCarrePoint> pResult, bool pXAxis, PlatteCarrePoint& pFrom, PlatteCarrePoint& pTo) const
+{
+  if(pXAxis)
+    {
+      assert(pFrom.getPcpY()==pTo.getPcpY());
+
+      // the x axis is totaly left of us
+      if(this->getUpperLeft().getPcpY()>pTo.getPcpY())
+        return;
+
+      // the x axis is totaly left of us
+      if(this->getLowerLeft().getPcpY()<pTo.getPcpY())
+        return;
+      
+      // the range is totaly above us
+      if(this->getUpperLeft().getPcpX()>pTo.getPcpX())
+        return;
+
+      // the range is totaly below us us
+      if(this->getUpperRight().getPcpX()<pFrom.getPcpX())
+        return;
+    }
+  else
+    {
+      assert(pFrom.getPcpX()==pTo.getPcpX());
+
+      // the y axis is totaly above us
+      if(this->getUpperLeft().getPcpX()>pTo.getPcpX())
+        return;
+
+      // the Y axis is totaly below of us
+      if(this->getUpperRight().getPcpX()<pTo.getPcpX())
+        return;
+      
+      // the range is totaly left of us
+      if(this->getUpperLeft().getPcpY()>pTo.getPcpY())
+        return;
+
+      // the range is totaly below us us
+      if(this->getLowerLeft().getPcpY()<pFrom.getPcpY())
+        return;
+    }
+
+  // the axis and the points are within us. Ask our children about it
+  zoom_upper_left ->getAllPointsOnAxis(pResult, pXAxis, pFrom, pTo);
+  zoom_upper_right->getAllPointsOnAxis(pResult, pXAxis, pFrom, pTo);
+  zoom_lower_left ->getAllPointsOnAxis(pResult, pXAxis, pFrom, pTo);
+  zoom_lower_right->getAllPointsOnAxis(pResult, pXAxis, pFrom, pTo);
 }

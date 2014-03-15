@@ -3,8 +3,8 @@
 
 #include <iostream>
 #include <list>
+#include <set>
 #include "PlatteCarrePoint.h"
-
 #include "Tile.h"
 
 /* Class to represent a tile in a 3D world
@@ -17,16 +17,16 @@ class Tile_Virtual : public Tile
   Tile_Virtual(Tile* pUpper_left, Tile* pUpper_right, Tile* pLower_left, Tile* pLower_right);
 
   // get the upper left point (by asking our children)
-  PlatteCarrePoint getUpperLeft() const;
+  const PlatteCarrePoint& getUpperLeft() const;
 
   // get the upper right point (by asking our children)
-  PlatteCarrePoint getUpperRight() const;
+  const PlatteCarrePoint& getUpperRight() const;
 
   // get the lower right point (by asking our children)
-  PlatteCarrePoint getLowerRight() const;
+  const PlatteCarrePoint& getLowerRight() const;
 
   // get the lower left point (by asking our children)
-  PlatteCarrePoint getLowerLeft() const;
+  const PlatteCarrePoint& getLowerLeft() const;
 
   // get the upper left tile
   Tile* getUpperLeftTile() const;
@@ -42,6 +42,9 @@ class Tile_Virtual : public Tile
 
   // replace this tile with another one
   void replaceTile(Tile * pNewTile, Tile * pOldTile);
+
+  // you have two points, pFrom and pTo, which are both on the same axis (see pXaxis) and you want to find all point which are on that axis and between both point
+  void getAllPointsOnAxis(std::set<PlatteCarrePoint> pResult, bool pXAxis, PlatteCarrePoint& pFrom, PlatteCarrePoint& pTo) const;
 
   // debug method to paint us
   void FIXME_paint(const double pZoomX, const double pZoomY, const double pZoomZ, const Vector3D pShift) const;
