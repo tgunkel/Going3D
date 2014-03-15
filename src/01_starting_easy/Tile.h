@@ -48,6 +48,9 @@ class Tile
   // debug method to paint us
   virtual void FIXME_paint(const double pZoomX, const double pZoomY, const double pZoomZ, const Vector3D pShift) const=0;
 
+  // is this a real Tile or a virtual one
+  virtual bool isReal() const=0;
+
  protected:
 
  private:

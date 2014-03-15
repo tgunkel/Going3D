@@ -49,6 +49,8 @@ class Tile_Virtual : public Tile
   // debug method to paint us
   void FIXME_paint(const double pZoomX, const double pZoomY, const double pZoomZ, const Vector3D pShift) const;
 
+  bool isReal() const;
+
  protected:
 
  private:

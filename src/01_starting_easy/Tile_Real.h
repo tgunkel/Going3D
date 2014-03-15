@@ -37,6 +37,10 @@ class Tile_Real : public Tile
   // you have two points, pFrom and pTo, which are both on the same axis (see pXaxis) and you want to find all point which are on that axis and between both point
   void getAllPointsOnAxis(std::set<PlatteCarrePoint>& pResult, bool pXAxis, const PlatteCarrePoint& pFrom, const PlatteCarrePoint& pTo) const;
 
+  bool isReal() const;
+
+  void FIXME_paintTriangle(const PlatteCarrePoint* p1, const PlatteCarrePoint* p2, const PlatteCarrePoint* p3, const double pZoomX, const double pZoomY, const double pZoomZ, const Vector3D pShift, const short pColor) const;
+
  protected:
 
  private:
