@@ -76,7 +76,7 @@ bool PlatteCarrePoint::operator <(const PlatteCarrePoint& pOther) const
     }
 }
 
-bool PlatteCarrePoint::operator==(const PlatteCarrePoint& pOther)
+bool PlatteCarrePoint::operator==(const PlatteCarrePoint& pOther) const
 {
   return (
           this->getPcpX()==pOther.getPcpX() &&
