@@ -93,7 +93,7 @@ void keyPressed(unsigned char key, int x, int y)
     case 'e': angle=angle.add(Vector3D( 0.0, 0.0, +1.0));   break;
     case 'c': angle=angle.add(Vector3D( 0.0, 0.0, -1.0));   break;     
     }
-  std::cout << "Rotation: " << angle << std::endl;
+  //std::cout << "Rotation: " << angle << std::endl;
 }
 
 void paint(RoundObjectWithMass obj)
