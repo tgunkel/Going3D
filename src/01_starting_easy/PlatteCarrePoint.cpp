@@ -66,7 +66,7 @@ bool PlatteCarrePoint::operator <(const PlatteCarrePoint& pOther) const
     {
       return (this->getPcpX()<pOther.getPcpX());
     }
-  else if(pOther.getPcpX()!=this->getPcpX())
+  else if(pOther.getPcpY()!=this->getPcpY())
     {
       return (this->getPcpY()<pOther.getPcpY());
     }
