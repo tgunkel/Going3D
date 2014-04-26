@@ -84,41 +84,49 @@ void Tile_Virtual::FIXME_paint(const double pZoomX, const double pZoomY, const d
 
 void Tile_Virtual::getAllPointsOnAxis(std::set<PlatteCarrePoint>& pResult, bool pXAxis, const PlatteCarrePoint& pFrom, const PlatteCarrePoint& pTo) const
 {
-  //std::cout << "Searching in " << *this << " on X-Axis " << pXAxis << " " << pFrom << " " << pTo << std::endl;
+  // std::cout << "Searching virtual in " << *this << " on X-Axis " << (pXAxis ? "true" : "false") << " " << pFrom << " " << pTo << std::endl;
 
   if(pXAxis)
     {
+      // from and to should be both on the same y value if they define the x-axis
       assert(pFrom.getPcpY()==pTo.getPcpY());
 
-      // the x axis is totaly left of us
-      if(this->getUpperLeft().getPcpY()>pTo.getPcpY())
-        return;
+      // from should be left of to
+      assert(pFrom.getPcpX()<=pTo.getPcpX());
 
-      // the x axis is totaly left of us
-      if(this->getLowerLeft().getPcpY()<pTo.getPcpY())
-        return;
-      
-      // the range is totaly above us
+      // the x range is totaly left of us
       if(this->getUpperLeft().getPcpX()>pTo.getPcpX())
         return;
 
-      // the range is totaly below us us
+      // the x range is totaly left of us
       if(this->getUpperRight().getPcpX()<pFrom.getPcpX())
+        return;
+      
+      // the x axis is totaly above us
+      if(this->getUpperLeft().getPcpY()>pTo.getPcpY())
+        return;
+
+      // the x axis is totaly below us us
+      if(this->getLowerLeft().getPcpY()<pTo.getPcpY())
         return;
     }
   else
     {
+      // we check the y axis so from and to should have the same x value
       assert(pFrom.getPcpX()==pTo.getPcpX());
 
-      // the y axis is totaly above us
+      // check from is above to
+      assert(pFrom.getPcpY()<=pTo.getPcpY());
+
+      // the Y axis is totaly left us
       if(this->getUpperLeft().getPcpX()>pTo.getPcpX())
         return;
 
-      // the Y axis is totaly below of us
+      // the Y axis is totaly right of us
       if(this->getUpperRight().getPcpX()<pTo.getPcpX())
         return;
       
-      // the range is totaly left of us
+      // the range is totaly above us
       if(this->getUpperLeft().getPcpY()>pTo.getPcpY())
         return;
 
