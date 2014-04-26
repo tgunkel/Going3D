@@ -149,5 +149,5 @@ bool Tile_Virtual::isReal() const
 
 std::ostream&  operator<<(std::ostream &strm, const Tile_Virtual &a)
 {
-    return strm << "(VUL:" << a.getUpperLeft() << "  LL: " << a.getLowerLeft() << " UR:" << a.getUpperRight() << "  LR:" << a.getLowerRight() << ")";
+    return strm << "(VUL:" << a.getUpperLeft() << "  VLL: " << a.getLowerLeft() << " VUR:" << a.getUpperRight() << "  VLR:" << a.getLowerRight() << ")";
 }
