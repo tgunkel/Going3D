@@ -131,7 +131,7 @@ Tile_Virtual* WorldModelReaderNasa::splitTile(Tile_Real* pTile, PlatteCarrePoint
 
   Tile_Virtual* result=new Tile_Virtual(ul, ur, ll, lr);
 
-  /*  
+  /*
   std::cout << "Tile : " << *pTile << std::endl;
   std::cout << "Split: " << pSplitPos << std::endl;
   std::cout << "ul   : " << *ul << std::endl;
@@ -171,6 +171,7 @@ PlatteCarrePoint WorldModelReaderNasa::getPointInTileWithMaxError(Tile_Real* pTi
       for(unsigned long cur_col=pTile->getUpperLeft().getPcpX(); cur_col<pTile->getUpperRight().getPcpX(); cur_col+=50)
         {
           PlatteCarrePoint pcp=this->readValue(cur_col, cur_row);
+
           double current_error=std::abs(pcp.getHeight()-pTile->getEstimatedValue(cur_col, cur_row));
           if(current_error>max_estimated_error)
             {
@@ -184,7 +185,7 @@ PlatteCarrePoint WorldModelReaderNasa::getPointInTileWithMaxError(Tile_Real* pTi
     }
   PlatteCarrePoint result(x,y,h);
 
-  std::cout << "Max error for " << *pTile << " found at " << result << " with estimated value " <<  pTile->getEstimatedValue(result.getPcpX(), result.getPcpX()) << std::endl;
+  std::cout << "Max error for " << *pTile << " found at " << result << " with estimated value " <<  pTile->getEstimatedValue(result.getPcpX(), result.getPcpY()) << std::endl;
 
   return result;
     }
