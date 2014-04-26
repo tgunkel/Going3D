@@ -40,7 +40,7 @@ class Tile
   void setParent(Tile_Virtual* pParent);
 
   // calculate an estimated value for a point within this tile
-  double getEstimatedValue(unsigned int x, unsigned int y) const;
+  double getEstimatedValue(const unsigned int x, const unsigned int y) const;
 
   // you have two points, pFrom and pTo, which are both on the same axis (see pXaxis) and you want to find all point which are on that axis and between both point
   virtual void getAllPointsOnAxis(std::set<PlatteCarrePoint>& pResult, bool pXAxis, const PlatteCarrePoint& pFrom, const PlatteCarrePoint& pTo) const=0;

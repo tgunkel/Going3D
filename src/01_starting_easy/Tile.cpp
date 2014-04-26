@@ -28,10 +28,16 @@ void Tile::setParent(Tile_Virtual* pParent)
   this->parent=pParent;
 }
 
-double Tile::getEstimatedValue(unsigned int x, unsigned int y) const
+double Tile::getEstimatedValue(const unsigned int x, const unsigned int y) const
 {
+  assert(x>=getUpperLeft().getPcpX());
+  assert(x<=getUpperRight().getPcpX());
+  assert(y>=getUpperLeft().getPcpY());
+  assert(y<=getLowerLeft().getPcpY());
+
   // calculate to what percentage your point is to the right or down side of this Tile
   double rightInPercent=(x-getUpperLeft().getPcpX())/(double)(getUpperRight().getPcpX()-getUpperLeft().getPcpX());
+  //double downInPercent= (y-getUpperLeft().getPcpY())/(double)(getLowerLeft().getPcpY()-getUpperLeft().getPcpY());
   double downInPercent= (y-getUpperLeft().getPcpY())/(double)(getUpperLeft().getPcpY()-getLowerLeft().getPcpY());
 
   assert(rightInPercent>=0 && rightInPercent<=1);
