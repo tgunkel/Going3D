@@ -11,7 +11,19 @@ Tile_Real::Tile_Real(const PlatteCarrePoint pUpperLeft, const PlatteCarrePoint p
   lowerLeft(pLowerLeft), 
   lowerRight(pLowerRight)
 {
+  // left must be left of right
+  assert(pUpperLeft.getPcpX()<=pUpperRight.getPcpX());
+  assert(pLowerLeft.getPcpX()<=pLowerRight.getPcpX());
 
+  // up has smaller values than down
+  assert(pUpperLeft.getPcpY() <=pLowerLeft.getPcpY());
+  assert(pUpperRight.getPcpY()<=pLowerRight.getPcpY());
+
+  // the rest must be equal
+  assert(pUpperLeft.getPcpY() ==pUpperRight.getPcpY());
+  assert(pLowerLeft.getPcpY() ==pLowerRight.getPcpY());
+  assert(pUpperLeft.getPcpX() ==pLowerLeft.getPcpX());
+  assert(pUpperRight.getPcpX()==pUpperRight.getPcpX());
 }
 
 void Tile_Real::FIXME_paintTriangle(const PlatteCarrePoint* p1, const PlatteCarrePoint* p2, const PlatteCarrePoint* p3, const double pZoomX, const double pZoomY, const double pZoomZ, const Vector3D pShift, const short pColor) const
@@ -53,7 +65,9 @@ void Tile_Real::FIXME_paint(const double pZoomX, const double pZoomY, const doub
 {
   std::cout << "Paint " << *this << std::endl;
 
-  // find the middle of the tile
+  // we want to paint this tile, which is a real tile, no virtual one
+
+  // first we find the middle of this tile, we will us this extra point for painting
   PlatteCarrePoint center(
                           this->upperLeft.getPcpX()+(this->upperRight.getPcpX()-this->upperLeft.getPcpX())/2.0,
                           this->upperLeft.getPcpY()+ (this->lowerLeft.getPcpY() -this->upperLeft.getPcpY())/2.0,
@@ -65,7 +79,18 @@ void Tile_Real::FIXME_paint(const double pZoomX, const double pZoomY, const doub
                            ) / 4.0
                           );
 
-  // find the top head of all tiles
+  // the center should be within the edges
+  assert(center.getPcpX()>=this->upperLeft.getPcpX());
+  assert(center.getPcpX()>=this->lowerLeft.getPcpX());
+  assert(center.getPcpX()<=this->upperRight.getPcpX());
+  assert(center.getPcpX()<=this->lowerRight.getPcpX());
+
+  assert(center.getPcpY()>=this->upperLeft.getPcpY());
+  assert(center.getPcpY()>=this->upperRight.getPcpY());
+  assert(center.getPcpY()<=this->lowerLeft.getPcpY());
+  assert(center.getPcpY()<=this->lowerRight.getPcpY());
+
+  // when we paint this tile, we have to find all neighbours of us. Start at the very head
   const Tile* head=this->getSuperParent();
 
   // find all points we have to paint arround the center
