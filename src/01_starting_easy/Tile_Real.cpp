@@ -28,9 +28,11 @@ Tile_Real::Tile_Real(const PlatteCarrePoint pUpperLeft, const PlatteCarrePoint p
 
 void Tile_Real::FIXME_paintTriangle(const PlatteCarrePoint* p1, const PlatteCarrePoint* p2, const PlatteCarrePoint* p3, const double pZoomX, const double pZoomY, const double pZoomZ, const Vector3D pShift, const short pColor) const
 {
+  /*
   std::cout << "P1 " << *p1 << std::endl;
   std::cout << "P2 " << *p2 << std::endl;
   std::cout << "P3 " << *p3 << std::endl;
+  */
 
   Vector3D v1=p1->get3DPoint4PlanePane (pZoomX, pZoomY, pZoomZ, pShift);
   Vector3D v2=p2->get3DPoint4PlanePane (pZoomX, pZoomY, pZoomZ, pShift);
@@ -63,7 +65,7 @@ void Tile_Real::FIXME_paintTriangle(const PlatteCarrePoint* p1, const PlatteCarr
 
 void Tile_Real::FIXME_paint(const double pZoomX, const double pZoomY, const double pZoomZ, const Vector3D pShift) const
 {
-  std::cout << "Paint " << *this << std::endl;
+  // std::cout << "Paint " << *this << std::endl;
 
   // we want to paint this tile, which is a real tile, no virtual one
 
@@ -99,28 +101,29 @@ void Tile_Real::FIXME_paint(const double pZoomX, const double pZoomY, const doub
     std::set<PlatteCarrePoint> points_up;
     head->getAllPointsOnAxis(points_up, true, this->getUpperLeft(), this->getUpperRight());
     std::list<PlatteCarrePoint> points_up_lst(points_up.begin(), points_up.end());
-    //points_up_lst.pop_back();
+    assert(points_up_lst.size()>=2);
     
     std::set<PlatteCarrePoint> points_right;
     head->getAllPointsOnAxis(points_right, false, this->getUpperRight(), this->getLowerRight());
     std::list<PlatteCarrePoint> points_right_lst(points_right.begin(), points_right.end());
+    assert(points_right_lst.size()>=2);
     
     std::set<PlatteCarrePoint>  points_down;
     head->getAllPointsOnAxis(points_down, true, this->getLowerLeft(), this->getLowerRight());
     std::list<PlatteCarrePoint> points_down_lst(points_down.begin(), points_down.end());
-    //points_down_lst.pop_back();
     points_down_lst.reverse();
+    assert(points_down_lst.size()>=2);
     
     std::set<PlatteCarrePoint> points_left;
     head->getAllPointsOnAxis(points_left, false, this->getUpperLeft(), this->getLowerLeft());
     std::list<PlatteCarrePoint> points_left_lst(points_left.begin(), points_left.end());
-    //points_left_lst.pop_back();
+    assert(points_left_lst.size()>=2);
     points_left_lst.reverse();
     
-    points_all.insert(points_all.end(), points_up_lst.begin(),   points_up_lst.end());
+    points_all.insert(points_all.end(), points_up_lst.begin(),    points_up_lst.end());
     points_all.insert(points_all.end(), points_right_lst.begin(), points_right_lst.end());
-    points_all.insert(points_all.end(), points_down_lst.begin(), points_down_lst.end());
-    points_all.insert(points_all.end(), points_left_lst.begin(), points_left_lst.end());
+    points_all.insert(points_all.end(), points_down_lst.begin(),  points_down_lst.end());
+    points_all.insert(points_all.end(), points_left_lst.begin(),  points_left_lst.end());
   }
 
   PlatteCarrePoint* p1=NULL;
@@ -129,10 +132,12 @@ void Tile_Real::FIXME_paint(const double pZoomX, const double pZoomY, const doub
 
   short color=0;
   std::list<PlatteCarrePoint>::iterator it;
+  /*
   for (it = points_all.begin(); it != points_all.end(); ++it)
     {
       std::cout << "DEBUG:" << *it << std::endl;
     }
+  */
 
   for (it = points_all.begin(); it != points_all.end(); ++it)
     {
@@ -171,31 +176,34 @@ const PlatteCarrePoint& Tile_Real::getLowerLeft() const
 
 void Tile_Real::getAllPointsOnAxis(std::set<PlatteCarrePoint>& pResult, bool pXAxis, const PlatteCarrePoint& pFrom, const PlatteCarrePoint& pTo) const
 { 
-  //std::cout << "Searching in " << *this << " on X-Axis " << pXAxis << " " << pFrom << " " << pTo << std::endl;
+  // std::cout << "Searching real in " << *this << " on X-Axis " << (pXAxis ? "true" : "false") << " " << pFrom << " " << pTo << std::endl;
 
   if(this->getUpperLeft().isBetween(pXAxis,  pFrom, pTo))
     {
-      //std::cout << "Hit " << this->getUpperLeft() << std::endl;      
+      // std::cout << "Hit " << this->getUpperLeft() << std::endl;
       pResult.insert(this->getUpperLeft());
     }
 
   if(this->getUpperRight().isBetween(pXAxis, pFrom, pTo))
     {
-      //std::cout << "Hit " << this->getUpperRight() << std::endl;      
+      // std::cout << "Hit " << this->getUpperRight() << std::endl;
       pResult.insert(this->getUpperRight());
     }
 
   if(this->getLowerLeft().isBetween(pXAxis,  pFrom, pTo))
     {
-      //std::cout << "Hit " << this->getLowerLeft() << std::endl;      
+      // std::cout << "Hit " << this->getLowerLeft() << std::endl;
       pResult.insert(this->getLowerLeft());
     }
 
   if(this->getLowerRight().isBetween(pXAxis, pFrom, pTo))
     {
-      //std::cout << "Hit " << this->getLowerRight() << std::endl;      
+      // std::cout << "Hit " << this->getLowerRight() << std::endl;
       pResult.insert(this->getLowerRight());
     }
+
+  // std::cout << "Found results " << pResult.size() << std::endl;
+
 }
 
 bool Tile_Real::isReal() const
