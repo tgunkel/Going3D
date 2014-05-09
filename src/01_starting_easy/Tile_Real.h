@@ -17,7 +17,7 @@ class Tile_Real : public Tile
   Tile_Real(const PlatteCarrePoint pUpperLeft, const PlatteCarrePoint pUpperRight, const PlatteCarrePoint pLowerLeft, const PlatteCarrePoint pLowerRight);
 
   // debug method to paint us
-  void FIXME_paint(const double pZoomX, const double pZoomY, const double pZoomZ, const Vector3D pShift) const;
+  void FIXME_paint(const double pZoomX, const double pZoomY, const double pZoomZ, const Vector3D pShift, const int FIXME_COLOR) const;
 
   // get the upper left point
   const PlatteCarrePoint& getUpperLeft() const;

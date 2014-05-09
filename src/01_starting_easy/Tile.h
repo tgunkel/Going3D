@@ -6,6 +6,7 @@
 #include <set>
 #include <cassert>
 #include "PlatteCarrePoint.h"
+#include <algorithm> // min
 
 class Tile_Virtual;
 
@@ -46,7 +47,7 @@ class Tile
   virtual void getAllPointsOnAxis(std::set<PlatteCarrePoint>& pResult, bool pXAxis, const PlatteCarrePoint& pFrom, const PlatteCarrePoint& pTo) const=0;
 
   // debug method to paint us
-  virtual void FIXME_paint(const double pZoomX, const double pZoomY, const double pZoomZ, const Vector3D pShift) const=0;
+  virtual void FIXME_paint(const double pZoomX, const double pZoomY, const double pZoomZ, const Vector3D pShift, const int FIXME_COLOR) const=0;
 
   // is this a real Tile or a virtual one
   virtual bool isReal() const=0;

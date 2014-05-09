@@ -28,6 +28,8 @@ Tile_Real::Tile_Real(const PlatteCarrePoint pUpperLeft, const PlatteCarrePoint p
 
 void Tile_Real::FIXME_paintTriangle(const PlatteCarrePoint* p1, const PlatteCarrePoint* p2, const PlatteCarrePoint* p3, const double pZoomX, const double pZoomY, const double pZoomZ, const Vector3D pShift, const short pColor) const
 {
+  assert(pColor>=0 && pColor <=7);
+
   /*
   std::cout << "P1 " << *p1 << std::endl;
   std::cout << "P2 " << *p2 << std::endl;
@@ -45,16 +47,32 @@ void Tile_Real::FIXME_paintTriangle(const PlatteCarrePoint* p1, const PlatteCarr
       glColor3f(1.0, 0.0, 0.0);
       break;
     case 1:
+      glColor3f(0.8, 0.0, 0.0);
+      break;
+
+    case 2:
       glColor3f(0.0, 1.0, 0.0);
       break;
-    case 2:
+    case 3:
+      glColor3f(0.0, 0.8, 0.0);
+      break;
+
+    case 4:
       glColor3f(0.0, 0.0, 1.0);
       break;
-    case 3:
+    case 5:
+      glColor3f(0.0, 0.0, 0.8);
+      break;
+
+    case 6:
       glColor3f(1.0, 1.0, 0.0);
       break;
+    case 7:
+      glColor3f(0.8, 0.8, 0.0);
+      break;
+
     default:
-      glColor3f(1.0, 0.0, 1.0);
+      glColor3f(0.5, 0.5, 0.5);
       break;
     }
   glVertex3f(v1.getX(), v1.getY(), -v1.getZ()/1.0);
@@ -63,7 +81,7 @@ void Tile_Real::FIXME_paintTriangle(const PlatteCarrePoint* p1, const PlatteCarr
   glEnd();
 }
 
-void Tile_Real::FIXME_paint(const double pZoomX, const double pZoomY, const double pZoomZ, const Vector3D pShift) const
+void Tile_Real::FIXME_paint(const double pZoomX, const double pZoomY, const double pZoomZ, const Vector3D pShift, const int FIXME_COLOR) const
 {
   // std::cout << "Paint " << *this << std::endl;
 
@@ -145,9 +163,9 @@ void Tile_Real::FIXME_paint(const double pZoomX, const double pZoomY, const doub
 
       if(p2!=NULL && !(*p1==*p2))
         {
-          this->FIXME_paintTriangle(p1, p2, p3, pZoomX, pZoomY, pZoomZ, pShift, color);
+          this->FIXME_paintTriangle(p1, p2, p3, pZoomX, pZoomY, pZoomZ, pShift, FIXME_COLOR*2+color);
           color++;
-          if(color>4) color=1;
+          if(color>1) color=0;
         }
       p2=p1;
     }
