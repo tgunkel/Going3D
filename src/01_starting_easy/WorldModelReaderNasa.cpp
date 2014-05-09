@@ -131,14 +131,13 @@ Tile_Virtual* WorldModelReaderNasa::splitTile(Tile_Real* pTile, PlatteCarrePoint
 
   Tile_Virtual* result=new Tile_Virtual(ul, ur, ll, lr);
 
-  /*
+
   std::cout << "Tile : " << *pTile << std::endl;
   std::cout << "Split: " << pSplitPos << std::endl;
   std::cout << "ul   : " << *ul << std::endl;
   std::cout << "ur   : " << *ur << std::endl;
   std::cout << "ll   : " << *ll << std::endl;
   std::cout << "lr   : " << *lr << std::endl;
-  */
 
   // match the original outer corners
   assert(ul->getUpperLeft() ==pTile->getUpperLeft());
@@ -162,13 +161,18 @@ Tile_Virtual* WorldModelReaderNasa::splitTile(Tile_Real* pTile, PlatteCarrePoint
 
 PlatteCarrePoint WorldModelReaderNasa::getPointInTileWithMaxError(Tile_Real* pTile)
 {
+  const long step_x=50;
+  const long step_y=50;
+  const long minsize_x=3000;
+  const long minsize_y=3000;
+
   double max_estimated_error=0;
   unsigned int x=0,y=0;
   short  h=0;
 
-  for(unsigned long cur_row=pTile->getUpperLeft().getPcpY(); cur_row<pTile->getLowerLeft().getPcpY(); cur_row+=50)
+  for(unsigned long cur_row=pTile->getUpperLeft().getPcpY()+minsize_y; cur_row+minsize_y<pTile->getLowerLeft().getPcpY(); cur_row+=step_y)
     {
-      for(unsigned long cur_col=pTile->getUpperLeft().getPcpX(); cur_col<pTile->getUpperRight().getPcpX(); cur_col+=50)
+      for(unsigned long cur_col=pTile->getUpperLeft().getPcpX()+minsize_x; cur_col+minsize_x<pTile->getUpperRight().getPcpX(); cur_col+=step_x)
         {
           PlatteCarrePoint pcp=this->readValue(cur_col, cur_row);
 
@@ -207,6 +211,14 @@ Tile_Virtual* WorldModelReaderNasa::splitTile(Tile_Real* pTile)
   return new_head;
 }
 
+
+/*
+Tile_Virtual* WorldModelReaderNasa::splitTileWithMaxError(Tile_Real* pTile)
+{
+  
+}
+*/
+
 Tile* WorldModelReaderNasa::getNiceWorld()
 {
   Tile_Real *start=new Tile_Real(this->readValue(0,            0),
@@ -224,16 +236,16 @@ Tile* WorldModelReaderNasa::getNiceWorld()
   Tile_Real* ll;
 
   lr=(Tile_Real*) result->getLowerRightTile();
-  //splitTile(lr);
+  splitTile(lr);
 
   ur=(Tile_Real*) result->getUpperRightTile();
-  //splitTile(ur);
+  splitTile(ur);
 
   ul=(Tile_Real*) result->getUpperLeftTile();
-  //splitTile(ul);
+  splitTile(ul);
 
   ll=(Tile_Real*) result->getLowerLeftTile();
-  //splitTile(ll);
+  splitTile(ll);
 
   std::cout << "This is the head" << *result << std::endl;
   std::cout << "This is UL"       << *result->getUpperLeftTile() << std::endl;
