@@ -6,7 +6,7 @@ CFLAGS=-c -Wall -O2
 LDFLAGS= -L/usr/X11R6/lib -lGLU -lGL -lglut -lm 
 
 # List of all source files
-SOURCES=main.cpp Vector3D.cpp ObjectWithMass.cpp RoundObjectWithMass.cpp RBGColor.cpp SystemWithObjects.cpp Camera.cpp WorldModelReaderNasa.cpp PlatteCarrePoint.cpp Tile.cpp Tile_Real.cpp Tile_Virtual.cpp
+SOURCES=main.cpp Vector3D.cpp ObjectWithMass.cpp RoundObjectWithMass.cpp RBGColor.cpp SystemWithObjects.cpp Camera.cpp WorldModelReaderNasa.cpp PlatteCarrePoint.cpp Tile.cpp Tile_Real.cpp Tile_Virtual.cpp WorldModelReaderNasa_TileSplitCandidate.cpp
 
 # Replace .cpp with .h the get the header files names
 HEADERS=$(SOURCES:.cpp=.h)
