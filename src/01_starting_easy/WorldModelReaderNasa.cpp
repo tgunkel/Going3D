@@ -4,13 +4,13 @@
 
 WorldModelReaderNasa::WorldModelReaderNasa()
 {
-  this->littleEndian=this->isLittleEndian();
-  this->cols=86400;
-  this->rows=43200;
-  this->skip_cols=1000;
-  this->skip_rows=1000;
+  littleEndian=this->isLittleEndian();
+  cols=86400;
+  rows=43200;
+  skip_cols=1000;
+  skip_rows=1000;
 
-  this->nasaFile=new std::ifstream("data/srtm_ramp2.world.86400x43200.bin", std::ios::in|std::ios::binary);
+  nasaFile=new std::ifstream("data/srtm_ramp2.world.86400x43200.bin", std::ios::in|std::ios::binary);
 }
 
 void WorldModelReaderNasa::closeFile()
@@ -106,7 +106,7 @@ Tile_Virtual* WorldModelReaderNasa::splitTile(Tile_Real* pTile, PlatteCarrePoint
                          this->readValue(pTile->getUpperLeft().getPcpX(),  pSplitPos.getPcpY()),
                          this->readValue(pSplitPos.getPcpX(),              pSplitPos.getPcpY())
                          );
-  
+
   // upper right tile
   Tile* ur=new Tile_Real(this->readValue(pSplitPos.getPcpX(),              pTile->getUpperRight().getPcpY()),
                          this->readValue(pTile->getUpperRight().getPcpX(), pTile->getUpperRight().getPcpY()),
@@ -130,7 +130,7 @@ Tile_Virtual* WorldModelReaderNasa::splitTile(Tile_Real* pTile, PlatteCarrePoint
                          );
 
   Tile_Virtual* result=new Tile_Virtual(ul, ur, ll, lr);
-
+  result->setParent(pTile->getParent());
 
   std::cout << "Tile : " << *pTile << std::endl;
   std::cout << "Split: " << pSplitPos << std::endl;
@@ -163,8 +163,8 @@ PlatteCarrePoint WorldModelReaderNasa::getPointInTileWithMaxError(Tile_Real* pTi
 {
   const long step_x=50;
   const long step_y=50;
-  const long minsize_x=500;
-  const long minsize_y=500;
+  const long minsize_x=5000;
+  const long minsize_y=5000;
 
   double max_estimated_error=0;
   unsigned int x=0,y=0;
@@ -243,6 +243,7 @@ Tile* WorldModelReaderNasa::getNiceWorld()
   Tile_Real* ur;
   Tile_Real* ul;
   Tile_Real* ll;
+
 
   lr=(Tile_Real*) result->getLowerRightTile();
   try {
