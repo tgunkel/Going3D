@@ -163,17 +163,22 @@ PlatteCarrePoint WorldModelReaderNasa::getPointInTileWithMaxError(Tile_Real* pTi
 {
   const long step_x=50;
   const long step_y=50;
-  const long minsize_x=3000;
-  const long minsize_y=3000;
+  const long minsize_x=500;
+  const long minsize_y=500;
 
   double max_estimated_error=0;
   unsigned int x=0,y=0;
   short  h=0;
 
-  for(unsigned long cur_row=pTile->getUpperLeft().getPcpY()+minsize_y; cur_row+minsize_y<pTile->getLowerLeft().getPcpY(); cur_row+=step_y)
+  for(unsigned long cur_row=pTile->getUpperLeft().getPcpY()+minsize_y; (cur_row+minsize_y)<pTile->getLowerLeft().getPcpY(); cur_row+=step_y)
     {
-      for(unsigned long cur_col=pTile->getUpperLeft().getPcpX()+minsize_x; cur_col+minsize_x<pTile->getUpperRight().getPcpX(); cur_col+=step_x)
+      for(unsigned long cur_col=pTile->getUpperLeft().getPcpX()+minsize_x; (cur_col+minsize_x)<pTile->getUpperRight().getPcpX(); cur_col+=step_x)
         {
+          assert(cur_col>=pTile->getUpperLeft().getPcpX());
+          assert(cur_col<=pTile->getUpperRight().getPcpX());
+          assert(cur_row>=pTile->getUpperLeft().getPcpY());
+          assert(cur_row<=pTile->getLowerLeft().getPcpY());
+
           PlatteCarrePoint pcp=this->readValue(cur_col, cur_row);
 
           double current_error=std::abs(pcp.getHeight()-pTile->getEstimatedValue(cur_col, cur_row));
@@ -187,12 +192,16 @@ PlatteCarrePoint WorldModelReaderNasa::getPointInTileWithMaxError(Tile_Real* pTi
             }
         }
     }
-  PlatteCarrePoint result(x,y,h);
 
-  std::cout << "Max error for " << *pTile << " found at " << result << " with estimated value " <<  pTile->getEstimatedValue(result.getPcpX(), result.getPcpY()) << std::endl;
-
-  return result;
+  if(max_estimated_error==0)
+    {
+      throw "No point with max error found";
     }
+
+  PlatteCarrePoint result(x,y,h);
+  std::cout << "Max error for " << *pTile << " found at " << result << " with estimated value " <<  pTile->getEstimatedValue(result.getPcpX(), result.getPcpY()) << std::endl;
+  return result;
+}
         
 Tile_Virtual* WorldModelReaderNasa::splitTile(Tile_Real* pTile)
 {
@@ -236,13 +245,25 @@ Tile* WorldModelReaderNasa::getNiceWorld()
   Tile_Real* ll;
 
   lr=(Tile_Real*) result->getLowerRightTile();
-  splitTile(lr);
+  try {
+    splitTile(lr);
+  } catch (char const* s) {
+    std::cout << "Exception: " << s << std::endl;
+  }
 
   ur=(Tile_Real*) result->getUpperRightTile();
-  splitTile(ur);
+  try {
+    splitTile(ur);
+  } catch (char const* s) {
+    std::cout << "Exception: " << s << std::endl;
+  }
 
   ul=(Tile_Real*) result->getUpperLeftTile();
-  splitTile(ul);
+  try {
+    splitTile(ul);
+  } catch (char const* s) {
+    std::cout << "Exception: " << s << std::endl;
+  }
 
   ll=(Tile_Real*) result->getLowerLeftTile();
   splitTile(ll);
