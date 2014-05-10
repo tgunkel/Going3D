@@ -140,12 +140,14 @@ Tile_Virtual* WorldModelReaderNasa::splitTile(Tile_Real* pTile, PlatteCarrePoint
       father->replaceTile(result, pTile);
     }
 
+  /*
   std::cout << "Tile : " << *pTile << std::endl;
   std::cout << "Split: " << pSplitPos << std::endl;
   std::cout << "ul   : " << *ul << std::endl;
   std::cout << "ur   : " << *ur << std::endl;
   std::cout << "ll   : " << *ll << std::endl;
   std::cout << "lr   : " << *lr << std::endl;
+  */
 
   // match the original outer corners
   assert(ul->getUpperLeft() ==pTile->getUpperLeft());
@@ -182,10 +184,10 @@ PlatteCarrePoint WorldModelReaderNasa::getPointInTileWithMaxError(Tile_Real* pTi
 {
   const long step_x=50;
   const long step_y=50;
-  const long minsize_x=50;
-  const long minsize_y=50;
+  const long minsize_x=10;
+  const long minsize_y=10;
 
-  double max_estimated_error=0;
+  double max_estimated_error=-1;
   unsigned int x=0,y=0;
   short  h=0;
 
@@ -213,7 +215,7 @@ PlatteCarrePoint WorldModelReaderNasa::getPointInTileWithMaxError(Tile_Real* pTi
         }
     }
 
-  if(max_estimated_error==0)
+  if(max_estimated_error<=0)
     {
       throw "No point with max error found";
     }
