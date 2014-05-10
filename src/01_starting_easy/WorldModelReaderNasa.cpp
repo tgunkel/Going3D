@@ -29,7 +29,7 @@ bool WorldModelReaderNasa::isLittleEndian()
   return (res==258);
 }
 
-PlatteCarrePoint WorldModelReaderNasa::readValue(const unsigned int pX, const unsigned int pY)
+PlatteCarrePoint WorldModelReaderNasa::readValue(const unsigned int pX, const unsigned int pY) const
 {
   if (this->nasaFile->is_open())
   {
@@ -101,14 +101,14 @@ void WorldModelReaderNasa::readFile()
 Tile_Virtual* WorldModelReaderNasa::splitTile(Tile_Real* pTile, PlatteCarrePoint pSplitPos)
 {
   // upper left tile
-  Tile* ul=new Tile_Real(this->readValue(pTile->getUpperLeft().getPcpX(),  pTile->getUpperLeft().getPcpY()),
+  Tile_Real* ul=new Tile_Real(this->readValue(pTile->getUpperLeft().getPcpX(),  pTile->getUpperLeft().getPcpY()),
                          this->readValue(pSplitPos.getPcpX(),              pTile->getUpperLeft().getPcpY()),
                          this->readValue(pTile->getUpperLeft().getPcpX(),  pSplitPos.getPcpY()),
                          this->readValue(pSplitPos.getPcpX(),              pSplitPos.getPcpY())
                          );
 
   // upper right tile
-  Tile* ur=new Tile_Real(this->readValue(pSplitPos.getPcpX(),              pTile->getUpperRight().getPcpY()),
+  Tile_Real* ur=new Tile_Real(this->readValue(pSplitPos.getPcpX(),              pTile->getUpperRight().getPcpY()),
                          this->readValue(pTile->getUpperRight().getPcpX(), pTile->getUpperRight().getPcpY()),
                          this->readValue(pSplitPos.getPcpX(),              pSplitPos.getPcpY()),
                          this->readValue(pTile->getUpperRight().getPcpX(), pSplitPos.getPcpY())
@@ -116,21 +116,29 @@ Tile_Virtual* WorldModelReaderNasa::splitTile(Tile_Real* pTile, PlatteCarrePoint
   
 
   // lower left tile
-  Tile* ll=new Tile_Real(this->readValue(pTile->getLowerLeft().getPcpX(),  pSplitPos.getPcpY()),
+  Tile_Real* ll=new Tile_Real(this->readValue(pTile->getLowerLeft().getPcpX(),  pSplitPos.getPcpY()),
                          this->readValue(pSplitPos.getPcpX(),              pSplitPos.getPcpY()),
                          this->readValue(pTile->getLowerLeft().getPcpX(),  pTile->getLowerLeft().getPcpY()),
                          this->readValue(pSplitPos.getPcpX(),              pTile->getLowerLeft().getPcpY())
                          );
   
   // lower right tile
-  Tile* lr=new Tile_Real(this->readValue(pSplitPos.getPcpX(),              pSplitPos.getPcpY()),
+  Tile_Real* lr=new Tile_Real(this->readValue(pSplitPos.getPcpX(),              pSplitPos.getPcpY()),
                          this->readValue(pTile->getLowerRight().getPcpX(), pSplitPos.getPcpY()),
                          this->readValue(pSplitPos.getPcpX(),              pTile->getLowerRight().getPcpY()),
                          this->readValue(pTile->getLowerRight().getPcpX(), pTile->getLowerRight().getPcpY())
                          );
 
+  // the new Tile gets the father of the one we splited
   Tile_Virtual* result=new Tile_Virtual(ul, ur, ll, lr);
   result->setParent(pTile->getParent());
+
+  // the father has to replace one of his childs with us
+  Tile_Virtual* father=pTile->getParent();
+  if(father!=NULL)
+    {
+      father->replaceTile(result, pTile);
+    }
 
   std::cout << "Tile : " << *pTile << std::endl;
   std::cout << "Split: " << pSplitPos << std::endl;
@@ -156,15 +164,26 @@ Tile_Virtual* WorldModelReaderNasa::splitTile(Tile_Real* pTile, PlatteCarrePoint
   assert(ul->getLowerLeft()==ll->getUpperLeft());
   assert(ll->getLowerRight()==lr->getLowerLeft());
 
+  // all new real Tiles are candidates for further splits
+  this->splitcandidates.push(this->getSplitCandidateFromTile(ul));
+  this->splitcandidates.push(this->getSplitCandidateFromTile(ur));
+  this->splitcandidates.push(this->getSplitCandidateFromTile(ll));
+  this->splitcandidates.push(this->getSplitCandidateFromTile(lr));
+
   return result;
 }
 
-PlatteCarrePoint WorldModelReaderNasa::getPointInTileWithMaxError(Tile_Real* pTile)
+double WorldModelReaderNasa::getErrorForTileAtPoint(Tile_Real* pTile, PlatteCarrePoint pPcp) const
+{
+  return std::abs((double)pPcp.getHeight()-pTile->getEstimatedValue(pPcp.getPcpX(), pPcp.getPcpY()));
+}
+
+PlatteCarrePoint WorldModelReaderNasa::getPointInTileWithMaxError(Tile_Real* pTile) const
 {
   const long step_x=50;
   const long step_y=50;
-  const long minsize_x=5000;
-  const long minsize_y=5000;
+  const long minsize_x=50;
+  const long minsize_y=50;
 
   double max_estimated_error=0;
   unsigned int x=0,y=0;
@@ -181,7 +200,8 @@ PlatteCarrePoint WorldModelReaderNasa::getPointInTileWithMaxError(Tile_Real* pTi
 
           PlatteCarrePoint pcp=this->readValue(cur_col, cur_row);
 
-          double current_error=std::abs(pcp.getHeight()-pTile->getEstimatedValue(cur_col, cur_row));
+          double current_error=getErrorForTileAtPoint(pTile, pcp);
+
           if(current_error>max_estimated_error)
             {
               //std::cout << "New max error: " << pcp << " " << current_error << std::endl;
@@ -202,79 +222,65 @@ PlatteCarrePoint WorldModelReaderNasa::getPointInTileWithMaxError(Tile_Real* pTi
   std::cout << "Max error for " << *pTile << " found at " << result << " with estimated value " <<  pTile->getEstimatedValue(result.getPcpX(), result.getPcpY()) << std::endl;
   return result;
 }
-        
-Tile_Virtual* WorldModelReaderNasa::splitTile(Tile_Real* pTile)
+
+WorldModelReaderNasa_TileSplitCandidate WorldModelReaderNasa::getSplitCandidateFromTile(Tile_Real* pTile) const
 {
-  // first find place where your tile has the biggest difference to the true value
+  // find place where your tile has the biggest difference to the true value
   PlatteCarrePoint max_error_point=this->getPointInTileWithMaxError(pTile);
-
-  // next split the tile at this point into 4 new ones
-  Tile_Virtual* new_head=this->splitTile(pTile, max_error_point);
-
-  // now replace us at our father
-  Tile_Virtual* father=pTile->getParent();
-  if(father!=NULL)
-    {
-      father->replaceTile(new_head, pTile);
-    }
-  return new_head;
+  double maxError=getErrorForTileAtPoint(pTile, max_error_point);
+  WorldModelReaderNasa_TileSplitCandidate splitCandidate=WorldModelReaderNasa_TileSplitCandidate(pTile, maxError, max_error_point);
+  return splitCandidate;
 }
 
-
-/*
-Tile_Virtual* WorldModelReaderNasa::splitTileWithMaxError(Tile_Real* pTile)
+Tile_Virtual* WorldModelReaderNasa::splitNextCandidate()
 {
-  
+  Tile_Virtual* result=NULL;
+
+  std::cout << "Do a split for you, candidates: " << splitcandidates.size() << std::endl;
+
+  while(!splitcandidates.empty())
+    {
+      WorldModelReaderNasa_TileSplitCandidate next=splitcandidates.top();
+      splitcandidates.pop();
+
+      std::cout << "Next split candidate " << next << std::endl;
+      
+      try
+        {
+          result=splitTile(next.getTile(), next.getMaxErrorPoint());
+          break;
+        }
+      catch(const char* err)
+        {
+          std::cout << "Split candidate could not be splitted: " << err << std::endl;
+        }
+    }
+
+  return result;
 }
-*/
 
 Tile* WorldModelReaderNasa::getNiceWorld()
 {
+  // the tile represents the whole world by just 4 points
   Tile_Real *start=new Tile_Real(this->readValue(0,            0),
                                  this->readValue(this->cols-1, 0),
                                  this->readValue(0,            this->rows-1),
                                  this->readValue(this->cols-1, this->rows-1)
                                  );
 
-  Tile_Virtual* result;
-  result=splitTile(start);
+  // this tile is the only split candidate we have for now
+  WorldModelReaderNasa_TileSplitCandidate splitCandidate=getSplitCandidateFromTile(start);
+  splitcandidates.push(splitCandidate);
 
-  Tile_Real* lr;
-  Tile_Real* ur;
-  Tile_Real* ul;
-  Tile_Real* ll;
+  // we split the entry one time to get a virtual one instead of a real tile
+  Tile_Virtual* result=splitNextCandidate();
 
-
-  lr=(Tile_Real*) result->getLowerRightTile();
-  try {
-    splitTile(lr);
-  } catch (char const* s) {
-    std::cout << "Exception: " << s << std::endl;
-  }
-
-  ur=(Tile_Real*) result->getUpperRightTile();
-  try {
-    splitTile(ur);
-  } catch (char const* s) {
-    std::cout << "Exception: " << s << std::endl;
-  }
-
-  ul=(Tile_Real*) result->getUpperLeftTile();
-  try {
-    splitTile(ul);
-  } catch (char const* s) {
-    std::cout << "Exception: " << s << std::endl;
-  }
-
-  ll=(Tile_Real*) result->getLowerLeftTile();
-  splitTile(ll);
-
-  std::cout << "This is the head" << *result << std::endl;
-  std::cout << "This is UL"       << *result->getUpperLeftTile() << std::endl;
-  std::cout << "This is UR"       << *result->getUpperRightTile() << std::endl;
-  std::cout << "This is LL"       << *result->getLowerLeftTile() << std::endl;
-  std::cout << "This is LR"       << *result->getLowerRightTile() << std::endl;
-
+  /*
+  for(int c=0; c<3; c++)
+    {
+      splitNextCandidate();
+    }
+  */
   return result;
 }
 

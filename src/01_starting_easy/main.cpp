@@ -91,7 +91,8 @@ void keyPressed(unsigned char key, int x, int y)
     case 'w': angle=angle.add(Vector3D( 0.0, +1.0, 0.0));   break;
     case 's': angle=angle.add(Vector3D( 0.0, -1.0, 0.0));   break;
     case 'e': angle=angle.add(Vector3D( 0.0, 0.0, +1.0));   break;
-    case 'c': angle=angle.add(Vector3D( 0.0, 0.0, -1.0));   break;     
+    case 'c': angle=angle.add(Vector3D( 0.0, 0.0, -1.0));   break;
+    case 'x': wm.splitNextCandidate(); break;
     }
   //std::cout << "Rotation: " << angle << std::endl;
 }
