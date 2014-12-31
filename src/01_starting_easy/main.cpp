@@ -22,7 +22,7 @@ Camera camera(Vector3D(0,0,5), Vector3D(0,0,0));
 Vector3D angle(0,-220,0);
 
 WorldModelReaderNasa wm=WorldModelReaderNasa();
-Tile* niceWorld;
+std::list<Tile*> niceWorld;
 
 void fillObjects()
 {
@@ -92,7 +92,6 @@ void keyPressed(unsigned char key, int x, int y)
     case 's': angle=angle.add(Vector3D( 0.0, -1.0, 0.0));   break;
     case 'e': angle=angle.add(Vector3D( 0.0, 0.0, +1.0));   break;
     case 'c': angle=angle.add(Vector3D( 0.0, 0.0, -1.0));   break;
-    case 'x': wm.splitNextCandidate(); break;
     }
   //std::cout << "Rotation: " << angle << std::endl;
 }
@@ -154,7 +153,11 @@ void display(void)
   const double max_paint_y=max_paint_x*max_value_y/max_value_x;
   const double max_paint_z=384400000.0;
 
-  niceWorld->FIXME_paint(max_paint_x/max_value_x, max_paint_y/max_value_y, max_paint_z/max_value_z, Vector3D(-max_paint_x/2.0, -max_paint_y/2.0, 0), 0);
+  // paint
+  for(std::list<Tile*>::iterator i=niceWorld.begin(); i!=niceWorld.end(); i++)
+    {
+      (*i)->FIXME_paint(max_paint_x/max_value_x, max_paint_y/max_value_y, max_paint_z/max_value_z, Vector3D(-max_paint_x/2.0, -max_paint_y/2.0, 0), 0);
+    }
 
   glutSwapBuffers();
 

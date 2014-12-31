@@ -1,69 +1,111 @@
 #include "Tile.h"
-#include "Tile_Virtual.h"
 
-Tile::Tile()
+#include <GL/gl.h>
+#include <GL/glut.h>
+#include <iostream>
+
+Tile::Tile(const PlatteCarrePoint pUpperLeft, const PlatteCarrePoint pUpperRight, const PlatteCarrePoint pLowerLeft, const PlatteCarrePoint pLowerRight) : 
+  upperLeft(pUpperLeft), 
+  upperRight(pUpperRight), 
+  lowerLeft(pLowerLeft), 
+  lowerRight(pLowerRight)
 {
-  this->parent=NULL;
+  // left must be left of right
+  assert(pUpperLeft.getPcpX()<=pUpperRight.getPcpX());
+  assert(pLowerLeft.getPcpX()<=pLowerRight.getPcpX());
+
+  // up has smaller values than down
+  assert(pUpperLeft.getPcpY() <=pLowerLeft.getPcpY());
+  assert(pUpperRight.getPcpY()<=pLowerRight.getPcpY());
+
+  // the rest must be equal
+  assert(pUpperLeft.getPcpY() ==pUpperRight.getPcpY());
+  assert(pLowerLeft.getPcpY() ==pLowerRight.getPcpY());
+  assert(pUpperLeft.getPcpX() ==pLowerLeft.getPcpX());
+  assert(pUpperRight.getPcpX()==pUpperRight.getPcpX());
 }
 
-Tile_Virtual* Tile::getParent() const
+void Tile::FIXME_paintTriangle(const PlatteCarrePoint* p1, const PlatteCarrePoint* p2, const PlatteCarrePoint* p3, const double pZoomX, const double pZoomY, const double pZoomZ, const Vector3D pShift, const short pColor) const
 {
-  return this->parent;
-}
-
-const Tile* Tile::getSuperParent() const
-{
-  if(this->getParent()==NULL)
-    {
-      return this;
-    }
-  else
-    {
-      return this->getParent()->getSuperParent();
-    }
-}
-
-void Tile::setParent(Tile_Virtual* pParent)
-{
-  this->parent=pParent;
-}
-
-double Tile::getEstimatedValue(const unsigned int x, const unsigned int y) const
-{
-  assert(x>=getUpperLeft().getPcpX());
-  assert(x<=getUpperRight().getPcpX());
-  assert(y>=getUpperLeft().getPcpY());
-  assert(y<=getLowerLeft().getPcpY());
-
-  // calculate to what percentage your point is to the right or down side of this Tile
-  double rightInPercent=((double)x-(double)getUpperLeft().getPcpX())/((double)getUpperRight().getPcpX()-(double)getUpperLeft().getPcpX());
-  double downInPercent= ((double)y-(double)getUpperLeft().getPcpY())/((double)getLowerLeft().getPcpY()-(double)getUpperLeft().getPcpY());
-
-  assert(rightInPercent>=0 && rightInPercent<=1);
-  assert(downInPercent>=0  && downInPercent<=1);
-
-  // find a fair x value between upper left and upper right
-  double upperRow=(1.0-rightInPercent)*(double)getUpperLeft().getHeight()+(rightInPercent)*(double)getUpperRight().getHeight();
-
-  // find a fair x value between lower left and lower right
-  double lowerRow=(1.0-rightInPercent)*(double)getLowerLeft().getHeight()+(rightInPercent)*(double)getLowerRight().getHeight();
+  assert(pColor>=0 && pColor <=7);
 
   /*
-  std::cout << "UPPER: " << getUpperLeft().getHeight() << ", " << getUpperRight().getHeight() << ": " << upperRow << std::endl;
-  std::cout << "LOWER: " << getLowerLeft().getHeight() << ", " << getLowerRight().getHeight() << ": " << lowerRow << std::endl;
+  std::cout << "P1 " << *p1 << std::endl;
+  std::cout << "P2 " << *p2 << std::endl;
+  std::cout << "P3 " << *p3 << std::endl;
   */
 
-  assert(upperRow+0.1>=std::min((double)getUpperLeft().getHeight(),  (double)getUpperRight().getHeight()));
-  assert(upperRow-0.1<=std::max((double)getUpperLeft().getHeight(),  (double)getUpperRight().getHeight()));
-  assert(lowerRow+0.1>=std::min((double)getLowerLeft().getHeight(),  (double)getLowerRight().getHeight()));
-  assert(lowerRow-0.1<=std::max((double)getLowerLeft().getHeight(),  (double)getLowerRight().getHeight()));
+  Vector3D v1=p1->get3DPoint4PlanePane (pZoomX, pZoomY, pZoomZ, pShift);
+  Vector3D v2=p2->get3DPoint4PlanePane (pZoomX, pZoomY, pZoomZ, pShift);
+  Vector3D v3=p3->get3DPoint4PlanePane (pZoomX, pZoomY, pZoomZ, pShift);
 
-  // now find a fair y value between the both fair x values
-  double res=(1.0-downInPercent)*upperRow+(downInPercent)*lowerRow;
+  glBegin(GL_TRIANGLES);
+  switch(pColor)
+    {
+    case 0:
+      glColor3f(1.0, 0.0, 0.0);
+      break;
+    case 1:
+      glColor3f(0.8, 0.0, 0.0);
+      break;
 
-  //std::cout << "Estimated value: for " << x << "/" << y << " right: " << rightInPercent << " down: " << downInPercent << " res: " << res << std::endl;
+    case 2:
+      glColor3f(0.0, 1.0, 0.0);
+      break;
+    case 3:
+      glColor3f(0.0, 0.8, 0.0);
+      break;
 
-  return res;
+    case 4:
+      glColor3f(0.0, 0.0, 1.0);
+      break;
+    case 5:
+      glColor3f(0.0, 0.0, 0.8);
+      break;
+
+    case 6:
+      glColor3f(1.0, 1.0, 0.0);
+      break;
+    case 7:
+      glColor3f(0.8, 0.8, 0.0);
+      break;
+
+    default:
+      glColor3f(0.5, 0.5, 0.5);
+      break;
+    }
+  glVertex3f(v1.getX(), v1.getY(), -v1.getZ()/1.0);
+  glVertex3f(v2.getX(), v2.getY(), -v2.getZ()/1.0);
+  glVertex3f(v3.getX(), v3.getY(), -v3.getZ()/1.0);
+  glEnd();
+}
+
+void Tile::FIXME_paint(const double pZoomX, const double pZoomY, const double pZoomZ, const Vector3D pShift, const int FIXME_COLOR) const
+{
+  // std::cout << "Paint " << *this << std::endl;
+
+  this->FIXME_paintTriangle(&this->getLowerLeft(), &this->getUpperLeft(),  &this->getUpperRight(), pZoomX, pZoomY, pZoomZ, pShift, 0);
+  this->FIXME_paintTriangle(&this->getLowerLeft(), &this->getLowerRight(), &this->getUpperRight(), pZoomX, pZoomY, pZoomZ, pShift, 1);
+}
+
+const PlatteCarrePoint& Tile::getUpperLeft() const
+{
+  return this->upperLeft;
+}
+
+const PlatteCarrePoint& Tile::getUpperRight() const
+{
+  return this->upperRight;
+}
+
+const PlatteCarrePoint& Tile::getLowerRight() const
+{
+  return this->lowerRight;
+}
+
+const PlatteCarrePoint& Tile::getLowerLeft() const
+{
+  return this->lowerLeft;
 }
 
 double Tile::getTileSize() const

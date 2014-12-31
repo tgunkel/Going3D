@@ -8,49 +8,30 @@
 #include "PlatteCarrePoint.h"
 #include <algorithm> // min
 
-class Tile_Virtual;
-
-/* Class to represent a tile in a 3D world
-
+/* Class to represent a square in a 3D world
  */
 class Tile
 {
  public:
   // constructor
-  Tile();
+  Tile(const PlatteCarrePoint pUpperLeft, const PlatteCarrePoint pUpperRight, const PlatteCarrePoint pLowerLeft, const PlatteCarrePoint pLowerRight);
 
   // get the upper left point
-  virtual const PlatteCarrePoint& getUpperLeft() const=0;
+  const PlatteCarrePoint& getUpperLeft() const;
 
   // get the upper right point
-  virtual const PlatteCarrePoint& getUpperRight() const=0;
-  
+  const PlatteCarrePoint& getUpperRight() const;
+
   // get the lower right point
-  virtual const PlatteCarrePoint& getLowerRight() const=0;
+  const PlatteCarrePoint& getLowerRight() const;
 
   // get the lower left point
-  virtual const PlatteCarrePoint& getLowerLeft() const=0;
-
-  // get the parent Tile for you (must be a virtual one, real ones have no children as they are real
-  Tile_Virtual* getParent() const;
-
-  // the the parent of all parents
-  const Tile* getSuperParent() const;
-
-  // set the parent Tile for this Tile
-  void setParent(Tile_Virtual* pParent);
-
-  // calculate an estimated value for a point within this tile
-  double getEstimatedValue(const unsigned int x, const unsigned int y) const;
-
-  // you have two points, pFrom and pTo, which are both on the same axis (see pXaxis) and you want to find all point which are on that axis and between both point
-  virtual void getAllPointsOnAxis(std::set<PlatteCarrePoint>& pResult, bool pXAxis, const PlatteCarrePoint& pFrom, const PlatteCarrePoint& pTo) const=0;
+  const PlatteCarrePoint& getLowerLeft() const;
 
   // debug method to paint us
-  virtual void FIXME_paint(const double pZoomX, const double pZoomY, const double pZoomZ, const Vector3D pShift, const int FIXME_COLOR) const=0;
+  void FIXME_paint(const double pZoomX, const double pZoomY, const double pZoomZ, const Vector3D pShift, const int FIXME_COLOR) const;
 
-  // is this a real Tile or a virtual one
-  virtual bool isReal() const=0;
+  void FIXME_paintTriangle(const PlatteCarrePoint* p1, const PlatteCarrePoint* p2, const PlatteCarrePoint* p3, const double pZoomX, const double pZoomY, const double pZoomZ, const Vector3D pShift, const short pColor) const;
 
   // get size of the tile
   double           getTileSize()         const;
@@ -58,7 +39,7 @@ class Tile
  protected:
 
  private:
-  Tile_Virtual * parent;
+  PlatteCarrePoint upperLeft, upperRight, lowerLeft, lowerRight;
 
   // override the << operator
   friend std::ostream& operator<<(std::ostream &strm, const Tile &a);
