@@ -151,11 +151,12 @@ void display(void)
   const double max_value_z=10000.0;
   const double max_paint_x=1058800000.0;
   const double max_paint_y=max_paint_x*max_value_y/max_value_x;
-  const double max_paint_z=384400000.0;
+  const double max_paint_z=154400000.0;
 
   // paint
   for(std::list<Tile*>::iterator i=niceWorld.begin(); i!=niceWorld.end(); i++)
     {
+      //                zoom X                   zoom Y                   zoom z                   shift                                            color
       (*i)->FIXME_paint(max_paint_x/max_value_x, max_paint_y/max_value_y, max_paint_z/max_value_z, Vector3D(-max_paint_x/2.0, -max_paint_y/2.0, 0), 0);
     }
 
