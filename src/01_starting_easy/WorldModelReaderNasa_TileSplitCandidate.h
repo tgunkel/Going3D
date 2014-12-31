@@ -24,9 +24,6 @@ class WorldModelReaderNasa_TileSplitCandidate
   double           getMaxError()      const;
   PlatteCarrePoint getMaxErrorPoint() const;
 
-  // get a value for the size of the tile
-  double           getTileSize()         const;
-
   bool operator    <(const WorldModelReaderNasa_TileSplitCandidate& pOther) const;
 
  private:

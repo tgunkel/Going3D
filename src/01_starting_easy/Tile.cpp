@@ -66,10 +66,21 @@ double Tile::getEstimatedValue(const unsigned int x, const unsigned int y) const
   return res;
 }
 
+double Tile::getTileSize() const
+{
+  double x=(double) (this->getUpperRight().getPcpX()-this->getUpperLeft().getPcpX());
+  double y=(double) (this->getLowerLeft(). getPcpY()-this->getUpperLeft().getPcpY());
+  assert(x>0);
+  assert(y>0);
+  double res=x*y;
+  assert(res>0);
+  return res;
+}
+
 
 std::ostream& operator<<(std::ostream &strm, const Tile &a)
 {
-  return strm << "( UL:" << a.getUpperLeft() << "  LL: " << a.getLowerLeft() << " UR:" << a.getUpperRight() << "  LR:" << a.getLowerRight() << ")";
+  return strm << "( UL:" << a.getUpperLeft() << "  LL: " << a.getLowerLeft() << " UR:" << a.getUpperRight() << "  LR:" << a.getLowerRight() << " Size: " << a.getTileSize() <<")";
 }
 
 

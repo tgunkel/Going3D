@@ -52,6 +52,9 @@ class Tile
   // is this a real Tile or a virtual one
   virtual bool isReal() const=0;
 
+  // get size of the tile
+  double           getTileSize()         const;
+
  protected:
 
  private:

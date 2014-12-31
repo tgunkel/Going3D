@@ -182,6 +182,32 @@ double WorldModelReaderNasa::getErrorForTileAtPoint(Tile_Real* pTile, PlatteCarr
 
 PlatteCarrePoint WorldModelReaderNasa::getPointInTileWithMaxError(Tile_Real* pTile) const
 {
+  // FIXME just return the center
+
+  std::cout << "Vorher : " << *pTile << std::endl;
+
+  int x=(int) (pTile->getUpperRight().getPcpX()-pTile->getUpperLeft().getPcpX());
+  int y=(int) (pTile->getLowerLeft(). getPcpY()-pTile->getUpperLeft().getPcpY());
+
+  std::cout << "X: " << x << " Y: " << y << std::endl;
+
+  assert(x>0);
+  assert(y>0);
+
+  x=pTile->getUpperLeft().getPcpX()+x/2;
+  y=pTile->getUpperLeft(). getPcpY()+y/2;
+
+  PlatteCarrePoint pcp=this->readValue(x, y);
+
+  short h=pcp.getHeight();
+  PlatteCarrePoint result(x,y,h);
+
+  std::cout << "Nachher: " << result << std::endl;
+
+  return result;
+
+  /*
+
   const long step_x=50;
   const long step_y=50;
   const long minsize_x=10;
@@ -223,6 +249,7 @@ PlatteCarrePoint WorldModelReaderNasa::getPointInTileWithMaxError(Tile_Real* pTi
   PlatteCarrePoint result(x,y,h);
   std::cout << "Max error for " << *pTile << " found at " << result << " with estimated value " <<  pTile->getEstimatedValue(result.getPcpX(), result.getPcpY()) << std::endl;
   return result;
+  */
 }
 
 WorldModelReaderNasa_TileSplitCandidate WorldModelReaderNasa::getSplitCandidateFromTile(Tile_Real* pTile) const
@@ -255,10 +282,11 @@ Tile_Virtual* WorldModelReaderNasa::splitNextCandidate()
       catch(const char* err)
         {
           std::cout << "Split candidate could not be splitted: " << err << std::endl;
+          throw err;
         }
     }
 
-  return result;
+   return result;
 }
 
 Tile* WorldModelReaderNasa::getNiceWorld()
