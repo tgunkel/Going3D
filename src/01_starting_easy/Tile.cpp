@@ -84,8 +84,22 @@ void Tile::FIXME_paint(const double pZoomX, const double pZoomY, const double pZ
 {
   // std::cout << "Paint " << *this << std::endl;
 
-  this->FIXME_paintTriangle(&this->getLowerLeft(), &this->getUpperLeft(),  &this->getUpperRight(), pZoomX, pZoomY, pZoomZ, pShift, 0);
-  this->FIXME_paintTriangle(&this->getLowerLeft(), &this->getLowerRight(), &this->getUpperRight(), pZoomX, pZoomY, pZoomZ, pShift, 1);
+  int colora;
+  int colorb;
+
+  if(this->isWater())
+    {
+      colora=4;
+      colorb=5;
+    }
+  else
+    {
+      colora=2;
+      colorb=3;
+    }
+
+  this->FIXME_paintTriangle(&this->getLowerLeft(), &this->getUpperLeft(),  &this->getUpperRight(), pZoomX, pZoomY, pZoomZ, pShift, colora);
+  this->FIXME_paintTriangle(&this->getLowerLeft(), &this->getLowerRight(), &this->getUpperRight(), pZoomX, pZoomY, pZoomZ, pShift, colorb);
 }
 
 const PlatteCarrePoint& Tile::getUpperLeft() const
@@ -119,6 +133,11 @@ double Tile::getTileSize() const
   return res;
 }
 
+bool Tile::isWater() const
+{
+  // only if all are water we are a water tile
+  return this->getUpperRight().isWater() && this->getUpperLeft().isWater() && this->getLowerRight().isWater() && this->getLowerLeft().isWater();
+}
 
 std::ostream& operator<<(std::ostream &strm, const Tile &a)
 {

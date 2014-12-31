@@ -151,7 +151,7 @@ void display(void)
   const double max_value_z=10000.0;
   const double max_paint_x=1058800000.0;
   const double max_paint_y=max_paint_x*max_value_y/max_value_x;
-  const double max_paint_z=154400000.0;
+  const double max_paint_z=84400000.0;
 
   // paint
   for(std::list<Tile*>::iterator i=niceWorld.begin(); i!=niceWorld.end(); i++)

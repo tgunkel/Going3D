@@ -22,6 +22,11 @@ short PlatteCarrePoint::getHeight() const
   return this->height;
 }
 
+bool PlatteCarrePoint::isWater() const
+{
+  return (this->getHeight()<0.0000000000001);
+}
+
 Vector3D PlatteCarrePoint::get3DPoint4PlanePane(const double pZoomX, const double pZoomY, const double pZoomZ, const Vector3D pShift) const
 {
   return Vector3D(

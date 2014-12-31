@@ -102,8 +102,8 @@ std::list<Tile*> WorldModelReaderNasa::getNiceWorld()
 {
   std::list<Tile*> result;
 
-  unsigned int step_x=400;
-  unsigned int step_y=400;
+  unsigned int step_x=300;
+  unsigned int step_y=300;
 
   unsigned int pos_x=0;
   unsigned int pos_y=0;

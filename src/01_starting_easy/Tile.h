@@ -36,6 +36,9 @@ class Tile
   // get size of the tile
   double           getTileSize()         const;
 
+  // is the tile a water only tile?
+  bool isWater() const;
+
  protected:
 
  private:

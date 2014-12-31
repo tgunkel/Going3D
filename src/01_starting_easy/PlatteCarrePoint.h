@@ -29,6 +29,9 @@ class PlatteCarrePoint
   // is this point between to other two on the X axis (Y  axis)
   bool isBetween(bool pXAxis, const PlatteCarrePoint& pFrom, const PlatteCarrePoint& pTo) const;
 
+  // is the point on the water level?
+  bool isWater() const;
+
   bool operator==(const PlatteCarrePoint& pOther) const;
 
   bool operator <(const PlatteCarrePoint& pOther) const;
