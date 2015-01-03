@@ -92,6 +92,8 @@ void keyPressed(unsigned char key, int x, int y)
     case 's': angle=angle.add(Vector3D( 0.0, -1.0, 0.0));   break;
     case 'e': angle=angle.add(Vector3D( 0.0, 0.0, +1.0));   break;
     case 'c': angle=angle.add(Vector3D( 0.0, 0.0, -1.0));   break;
+    case '+': scale=scale.mult(2);   break;
+    case '-': scale=scale.mult(.5);   break;
     }
   //std::cout << "Rotation: " << angle << std::endl;
 }
@@ -146,18 +148,20 @@ void display(void)
   paint(earth);
   */
 
+  /*
   const double max_value_x=86400.0;
   const double max_value_y=43200.0;
   const double max_value_z=10000.0;
   const double max_paint_x=1058800000.0;
   const double max_paint_y=max_paint_x*max_value_y/max_value_x;
   const double max_paint_z=84400000.0;
+  */
 
   // paint
   for(std::list<Tile*>::iterator i=niceWorld.begin(); i!=niceWorld.end(); i++)
     {
       //                zoom X                   zoom Y                   zoom z                   shift                                            color
-      (*i)->FIXME_paint(max_paint_x/max_value_x, max_paint_y/max_value_y, max_paint_z/max_value_z, Vector3D(-max_paint_x/2.0, -max_paint_y/2.0, 0), 0);
+      (*i)->FIXME_paint();
     }
 
   glutSwapBuffers();

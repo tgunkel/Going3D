@@ -25,7 +25,7 @@ Tile::Tile(const PlatteCarrePoint pUpperLeft, const PlatteCarrePoint pUpperRight
   assert(pUpperRight.getPcpX()==pUpperRight.getPcpX());
 }
 
-void Tile::FIXME_paintTriangle(const PlatteCarrePoint* p1, const PlatteCarrePoint* p2, const PlatteCarrePoint* p3, const double pZoomX, const double pZoomY, const double pZoomZ, const Vector3D pShift, const short pColor) const
+void Tile::FIXME_paintTriangle(const PlatteCarrePoint* p1, const PlatteCarrePoint* p2, const PlatteCarrePoint* p3, const short pColor) const
 {
   assert(pColor>=0 && pColor <=7);
 
@@ -35,9 +35,9 @@ void Tile::FIXME_paintTriangle(const PlatteCarrePoint* p1, const PlatteCarrePoin
   std::cout << "P3 " << *p3 << std::endl;
   */
 
-  Vector3D v1=p1->get3DPoint4PlanePane (pZoomX, pZoomY, pZoomZ, pShift);
-  Vector3D v2=p2->get3DPoint4PlanePane (pZoomX, pZoomY, pZoomZ, pShift);
-  Vector3D v3=p3->get3DPoint4PlanePane (pZoomX, pZoomY, pZoomZ, pShift);
+  Vector3D v1=p1->getPointIn3D();
+  Vector3D v2=p2->getPointIn3D();
+  Vector3D v3=p3->getPointIn3D();
 
   glBegin(GL_TRIANGLES);
   switch(pColor)
@@ -80,7 +80,7 @@ void Tile::FIXME_paintTriangle(const PlatteCarrePoint* p1, const PlatteCarrePoin
   glEnd();
 }
 
-void Tile::FIXME_paint(const double pZoomX, const double pZoomY, const double pZoomZ, const Vector3D pShift, const int FIXME_COLOR) const
+void Tile::FIXME_paint() const
 {
   // std::cout << "Paint " << *this << std::endl;
 
@@ -98,8 +98,8 @@ void Tile::FIXME_paint(const double pZoomX, const double pZoomY, const double pZ
       colorb=3;
     }
 
-  this->FIXME_paintTriangle(&this->getLowerLeft(), &this->getUpperLeft(),  &this->getUpperRight(), pZoomX, pZoomY, pZoomZ, pShift, colora);
-  this->FIXME_paintTriangle(&this->getLowerLeft(), &this->getLowerRight(), &this->getUpperRight(), pZoomX, pZoomY, pZoomZ, pShift, colorb);
+  this->FIXME_paintTriangle(&this->getLowerLeft(), &this->getUpperLeft(),  &this->getUpperRight(), colora);
+  this->FIXME_paintTriangle(&this->getLowerLeft(), &this->getLowerRight(), &this->getUpperRight(), colorb);
 }
 
 const PlatteCarrePoint& Tile::getUpperLeft() const

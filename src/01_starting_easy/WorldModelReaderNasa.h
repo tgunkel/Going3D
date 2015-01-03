@@ -27,6 +27,8 @@ class WorldModelReaderNasa
   // return a pointer to the first tile which represents the data in the file
   std::list<Tile*> getNiceWorld();
 
+  static const unsigned int RADIUS_EARTH;
+
  private:
   // close the file
   void closeFile();

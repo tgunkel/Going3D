@@ -2,6 +2,8 @@
 #include <cassert>
 #include <cmath>
 
+unsigned const int WorldModelReaderNasa::RADIUS_EARTH=6371000;
+
 WorldModelReaderNasa::WorldModelReaderNasa()
 {
   littleEndian=this->isLittleEndian();
@@ -63,7 +65,7 @@ PlatteCarrePoint WorldModelReaderNasa::readValue(const unsigned int pX, const un
         // move the upper up and leave the lower low
         short value=((((short) upper << 8) + lower));
         
-        return PlatteCarrePoint(pX, pY, value);
+        return PlatteCarrePoint(pX, pY, value, this->cols, this->rows, RADIUS_EARTH);
       }
   }
   else
@@ -87,10 +89,10 @@ void WorldModelReaderNasa::readFile()
         for(unsigned long cur_col=0; cur_col<this->cols; cur_col+=this->skip_cols)
           {
             PlatteCarrePoint pcp=this->readValue(cur_col, cur_row);
-            if(pcp.getHeight()==0)
+            if(pcp.getPcpHeight()==0)
               std::cout << " " << " ";
             else
-              std::cout << pcp.getHeight()/1000 << " ";
+              std::cout << pcp.getPcpHeight()/1000 << " ";
           }
         std::cout << std::endl;
       }
@@ -102,8 +104,8 @@ std::list<Tile*> WorldModelReaderNasa::getNiceWorld()
 {
   std::list<Tile*> result;
 
-  unsigned int step_x=300;
-  unsigned int step_y=300;
+  unsigned int step_x=100;
+  unsigned int step_y=100;
 
   unsigned int pos_x=0;
   unsigned int pos_y=0;
