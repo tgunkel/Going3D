@@ -45,6 +45,9 @@ class PlatteCarrePoint
   // is the point on the water level?
   bool isWater() const;
 
+  // is the point very high?
+  bool isMountain() const;
+
   // override the == operator
   bool operator==(const PlatteCarrePoint& pOther) const;
 

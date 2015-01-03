@@ -39,6 +39,9 @@ class Tile
   // is the tile a water only tile?
   bool isWater() const;
 
+  // is the tile a mountain tile?
+  bool isMountain() const;
+
  protected:
 
  private:

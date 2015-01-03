@@ -92,6 +92,11 @@ void Tile::FIXME_paint() const
       colora=4;
       colorb=5;
     }
+  else if(this->isMountain())
+    {
+      colora=1;
+      colorb=6;
+    }
   else
     {
       colora=2;
@@ -137,6 +142,12 @@ bool Tile::isWater() const
 {
   // only if all are water we are a water tile
   return this->getUpperRight().isWater() && this->getUpperLeft().isWater() && this->getLowerRight().isWater() && this->getLowerLeft().isWater();
+}
+
+bool Tile::isMountain() const
+{
+  // if one is a mountain we are a mountain tile
+  return this->getUpperRight().isMountain() || this->getUpperLeft().isMountain() || this->getLowerRight().isMountain() || this->getLowerLeft().isMountain();
 }
 
 std::ostream& operator<<(std::ostream &strm, const Tile &a)

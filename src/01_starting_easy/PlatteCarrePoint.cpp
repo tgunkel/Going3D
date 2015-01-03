@@ -76,6 +76,12 @@ bool PlatteCarrePoint::isWater() const
   return (this->getPcpHeight()<0.0000000000001);
 }
 
+bool PlatteCarrePoint::isMountain() const
+{
+  return (this->getPcpHeight()>2000);
+}
+
+
 std::ostream& operator<<(std::ostream &strm, const PlatteCarrePoint &a)
 {
   return strm << "PlatteCarre: " << a.getPcpX() << "/" << a.getPcpY() << " > " << a.getPcpHeight() << " Angle: " << a.getLongtitude() << " / " << a.getLatitude() << " 3D point: " << a.getPointIn3D();
