@@ -40,6 +40,12 @@ class Vector3D
   // a new vector where all values have been multiplied with your scalar
   Vector3D mult(Vector3D scalar) const;
 
+  // result is this vector rotated arround the Z axis
+  Vector3D rotateZ(const double angle) const;
+
+  // result is this vector rotated arround the X axis
+  Vector3D rotateX(const double angle) const;
+
   // the 0/0/0 vector
   static Vector3D ZERO_ZERO_ZERO();
 
