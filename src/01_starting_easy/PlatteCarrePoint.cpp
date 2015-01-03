@@ -1,68 +1,79 @@
 #include "PlatteCarrePoint.h"
+#include <math.h>
 
-PlatteCarrePoint::PlatteCarrePoint(const unsigned int pX, const unsigned int pY, const short pHeight)
+PlatteCarrePoint::PlatteCarrePoint(const unsigned int pPcpX, const unsigned int pPcpY, const short pPcpHeight, const unsigned int pPcpMaxX, const unsigned int pPcpMaxY, const unsigned int pSphereRadius) : 
+  pcpX(pPcpX), 
+  pcpY(pPcpY), 
+  pcpHeight(pPcpHeight),
+  sphereRadius(pSphereRadius),
+  longtitude(getLtitude(pPcpX, pPcpMaxX)),
+  latitude  (getLtitude(pPcpY, pPcpMaxY)),
+  pointIn3D(get3DPoint(longtitude, latitude, sphereRadius, pPcpHeight))
+{  
+  //std::cout << *this << std::endl;
+}
+
+double PlatteCarrePoint::getLtitude(const unsigned int pValue, const unsigned int pMaxValue) const
 {
-  this->x=pX;
-  this->y=pY;
-  this->height=pHeight;
+  return (pValue/((double) pMaxValue)*360.0)-180.0;
+}
+
+Vector3D PlatteCarrePoint::get3DPoint(const double pLongtitude, const double pLatitude, const unsigned int pSphereRadius, const short pPcpHeight) const
+{
+  // we declare the north  - south axis        to be the z axis
+  // we declare the east   - west  axis        to be the x axis
+  // we declare the viewer - earth center axis to be the y axis
+
+  // this is the point at 0/0
+  Vector3D result=Vector3D(0, pSphereRadius+(int) pPcpHeight, 0);
+
+  // now rotate it according to the longtitude to the left or the right (arround the z axis)
+  result=result.rotateZ(pLongtitude);
+
+  // now rotate it according to the latitude up or down (arround the x axis)
+  result=result.rotateX(pLatitude);
+
+  return result;
 }
 
 unsigned int PlatteCarrePoint::getPcpX() const
 {
-  return this->x;
+  return this->pcpX;
 }
 
 unsigned int PlatteCarrePoint::getPcpY() const
 {
-  return this->y;
+  return this->pcpY;
 }
 
-short PlatteCarrePoint::getHeight() const
+short PlatteCarrePoint::getPcpHeight() const
 {
-  return this->height;
+  return this->pcpHeight;
+}
+
+double PlatteCarrePoint::getLongtitude() const
+{
+  return this->longtitude;
+}
+
+double PlatteCarrePoint::getLatitude() const
+{
+  return this->latitude;
+}
+
+Vector3D PlatteCarrePoint::getPointIn3D() const
+{
+  return this->pointIn3D;
 }
 
 bool PlatteCarrePoint::isWater() const
 {
-  return (this->getHeight()<0.0000000000001);
-}
-
-Vector3D PlatteCarrePoint::get3DPoint4PlanePane(const double pZoomX, const double pZoomY, const double pZoomZ, const Vector3D pShift) const
-{
-  return Vector3D(
-                  ((double) this->x       * (double) pZoomX)+pShift.getX(),
-                  ((double) this->y       * (double) pZoomY)+pShift.getY(),
-                  ((double)  this->height * (double) pZoomZ)+pShift.getZ()
-                  );
+  return (this->getPcpHeight()<0.0000000000001);
 }
 
 std::ostream& operator<<(std::ostream &strm, const PlatteCarrePoint &a)
 {
-  return strm << "(" << a.getPcpX() << "/" << a.getPcpY() << "/" << a.getHeight() << ") ";
-}
-
-bool PlatteCarrePoint::isBetween(bool pXAxis, const PlatteCarrePoint& pFrom, const PlatteCarrePoint& pTo) const
-{
-  // should we check vs the X axis?
-  if(pXAxis)
-    {
-      // the left and right border has to be on the same y level
-      if(pFrom.getPcpY()!=pTo.getPcpY())
-        {
-          throw "PlatteCarrePoint::isBetween with pFrom and pTo not on the same y axis";
-        }
-      return (this->getPcpY()==pFrom.getPcpY() && this->getPcpX()>=pFrom.getPcpX() && getPcpX()<=pTo.getPcpX());
-    }
-  // should we check vs the Y axis?
-  else
-    {
-      // the top and bottom border has to be on the same x level
-      if(pFrom.getPcpX()!=pTo.getPcpX())
-        {
-          throw "PlatteCarrePoint::isBetween with pFrom and pTo not on the same x axis";
-        }
-      return (this->getPcpX()==pFrom.getPcpX() && this->getPcpY()>=pFrom.getPcpY() && getPcpY()<=pTo.getPcpY());
-    }
+  return strm << "PlatteCarre: " << a.getPcpX() << "/" << a.getPcpY() << " > " << a.getPcpHeight() << " Angle: " << a.getLongtitude() << " / " << a.getLatitude() << " 3D point: " << a.getPointIn3D();
 }
 
 bool PlatteCarrePoint::operator <(const PlatteCarrePoint& pOther) const
@@ -77,7 +88,7 @@ bool PlatteCarrePoint::operator <(const PlatteCarrePoint& pOther) const
     }
   else
     {
-      return (this->getHeight()<pOther.getHeight());
+      return (this->getPcpHeight()<pOther.getPcpHeight());
     }
 }
 
@@ -86,6 +97,7 @@ bool PlatteCarrePoint::operator==(const PlatteCarrePoint& pOther) const
   return (
           this->getPcpX()==pOther.getPcpX() &&
           this->getPcpY()==pOther.getPcpY() &&
-          this->getHeight()==pOther.getHeight()
+          this->getPcpHeight()==pOther.getPcpHeight()
           );
 }
+

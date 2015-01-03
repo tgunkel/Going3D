@@ -6,16 +6,23 @@
 
 #include "Vector3D.h"
 
-/* This defines a 2D point with a height. 
+/* 
+   The represents a point on a sphere with an Equirectangular Projection
    See http://en.wikipedia.org/wiki/Equirectangular_projection
+
+   We have the following representations of ourself:
+   - a x/y point in a 2D world, like on a 2D map, a Platte Carre Point
+   - longtitude / latitude
+   - a 3D point on a 3D sphere
+   
  */
 class PlatteCarrePoint
 {
  public:
-  // constructor
-  PlatteCarrePoint(const unsigned int pX, const unsigned int pY, const short pHeight);
-
-  Vector3D get3DPoint4PlanePane(const double pZoomX, const double pZoomY, const double pZoomZ, const Vector3D pShift) const;
+  /*
+   Constructor for a x/y point in a 2D world with an extra height.
+  */
+  PlatteCarrePoint(const unsigned int pPcpX, const unsigned int pPcpY, const short pPcpHeight, const unsigned int pMaxPcpX, const unsigned intpMaxPcpY, const unsigned int pSphereRadius);
 
   // get the column in the row where this point lies
   unsigned int getPcpX() const;
@@ -23,27 +30,51 @@ class PlatteCarrePoint
   // get the row where this point lies
   unsigned int getPcpY() const;
 
-  // get the value of this point in column / row
-  short getHeight() const;
+  // get the height value of this point in column / row
+  short getPcpHeight() const;
 
-  // is this point between to other two on the X axis (Y  axis)
-  bool isBetween(bool pXAxis, const PlatteCarrePoint& pFrom, const PlatteCarrePoint& pTo) const;
+  // Longtitude
+  double getLongtitude() const;
+
+  // Latitude
+  double getLatitude() const;
+
+  // this point as a 3D point on a sphere
+  Vector3D getPointIn3D() const;
 
   // is the point on the water level?
   bool isWater() const;
 
+  // override the == operator
   bool operator==(const PlatteCarrePoint& pOther) const;
 
+  // override the < operator
   bool operator <(const PlatteCarrePoint& pOther) const;
 
+ protected:
+  // get the 2D x or y value and calculate the lontitude or latitude for it
+  double getLtitude(const unsigned int pValue, const unsigned int pMaxValue) const;
+
+  // get the 3D point on a sphere
+  Vector3D get3DPoint(const double pLongtitude, const double pLatitude, const unsigned int pSphereRadius, const short pPcpHeight) const;
+
  private:
-  unsigned int x, y;
-  short height;
+  // this is a representation in 2D like in a 2D map with x,y and a height value for mountains
+  const unsigned int pcpX, pcpY;
+  const short        pcpHeight;
+
+  // the radius of the sphere we are living on
+  const unsigned int sphereRadius;
+
+  // this is a representation in 3D with 2 angles
+  const double       longtitude, latitude;
+
+  // this is a representation in 3D with a x/y/z point
+  const Vector3D     pointIn3D;
 
   // override the << operator
   friend std::ostream& operator<<(std::ostream &strm, const PlatteCarrePoint &a);
 
 };
-
 
 #endif
