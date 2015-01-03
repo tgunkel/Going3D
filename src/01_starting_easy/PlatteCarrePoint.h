@@ -52,8 +52,11 @@ class PlatteCarrePoint
   bool operator <(const PlatteCarrePoint& pOther) const;
 
  protected:
-  // get the 2D x or y value and calculate the lontitude or latitude for it
-  double getLtitude(const unsigned int pValue, const unsigned int pMaxValue) const;
+  // calculate the latitude for the 2D x or y values
+  double getLatitude4Pcp(const unsigned int pValue, const unsigned int pMaxValue) const;
+
+  // calculate the latitude for the 2D x or y values
+  double getLongtitude4Pcp(const unsigned int pValue, const unsigned int pMaxValue) const;
 
   // get the 3D point on a sphere
   Vector3D get3DPoint(const double pLongtitude, const double pLatitude, const unsigned int pSphereRadius, const short pPcpHeight) const;

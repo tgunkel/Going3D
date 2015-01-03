@@ -6,33 +6,38 @@ PlatteCarrePoint::PlatteCarrePoint(const unsigned int pPcpX, const unsigned int 
   pcpY(pPcpY), 
   pcpHeight(pPcpHeight),
   sphereRadius(pSphereRadius),
-  longtitude(getLtitude(pPcpX, pPcpMaxX)),
-  latitude  (getLtitude(pPcpY, pPcpMaxY)),
+  longtitude(getLongtitude4Pcp(pPcpX, pPcpMaxX)),
+  latitude  (getLatitude4Pcp(pPcpY, pPcpMaxY)),
   pointIn3D(get3DPoint(longtitude, latitude, sphereRadius, pPcpHeight))
 {  
-  //std::cout << *this << std::endl;
+  // std::cout << *this << std::endl;
 }
 
-double PlatteCarrePoint::getLtitude(const unsigned int pValue, const unsigned int pMaxValue) const
+double PlatteCarrePoint::getLatitude4Pcp(const unsigned int pValue, const unsigned int pMaxValue) const
 {
-  return (pValue/((double) pMaxValue)*360.0)-180.0;
+  return -((pValue/((double) pMaxValue)*180.0)-90.0);
+}
+
+double PlatteCarrePoint::getLongtitude4Pcp(const unsigned int pValue, const unsigned int pMaxValue) const
+{
+  return -((pValue/((double) pMaxValue)*360.0)-180.0);
 }
 
 Vector3D PlatteCarrePoint::get3DPoint(const double pLongtitude, const double pLatitude, const unsigned int pSphereRadius, const short pPcpHeight) const
 {
-  // we declare the north  - south axis        to be the z axis
-  // we declare the east   - west  axis        to be the x axis
-  // we declare the viewer - earth center axis to be the y axis
+  // http://stackoverflow.com/questions/10473852/convert-latitude-and-longitude-to-point-in-3d-space?rq=1
+  double lng=pLongtitude*M_PI/180.0;
+  double lat=pLatitude  *M_PI/180.0;
 
-  // this is the point at 0/0
-  Vector3D result=Vector3D(0, pSphereRadius+(int) pPcpHeight, 0);
+  double h=(double) pSphereRadius+((double) pPcpHeight);
 
-  // now rotate it according to the longtitude to the left or the right (arround the z axis)
-  result=result.rotateZ(pLongtitude);
+  Vector3D result=Vector3D(
+                           h*cos(lat)*cos(lng),
+                           h*cos(lat)*sin(lng),
+                           h*sin(lat)
+                           );
 
-  // now rotate it according to the latitude up or down (arround the x axis)
-  result=result.rotateX(pLatitude);
-
+  
   return result;
 }
 
