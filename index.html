@@ -53,16 +53,18 @@
         <h3>Transforming 2D earth model into a 3D one</h3>
         The x columns represent the Latitude (-180° to +180°) and y rows represent the Latitude (-90° to +90°) (Platte Carre Points). Having those you can calculate a 3D position on a sphere:
         <a href="http://stackoverflow.com/questions/10473852/convert-latitude-and-longitude-to-point-in-3d-space?rq=1">Convert Latitude and Longitude to point in 3D Space</a>:
-        <pre>double lng=pLongtitude*M_PI/180.0;
-        double lat=pLatitude  *M_PI/180.0;
-
-        double h=(double) pSphereRadius+((double) pPcpHeight);
-
-        Vector3D result=Vector3D(
-        h*cos(lat)*cos(lng),
-        h*cos(lat)*sin(lng),
-        h*sin(lat)
-        );</pre>
+        <pre>
+          double lng=pLongtitude*M_PI/180.0;
+          double lat=pLatitude  *M_PI/180.0;
+          
+          double h=(double) pSphereRadius+((double) pPcpHeight);
+          
+          Vector3D result=Vector3D(
+          h*cos(lat)*cos(lng),
+          h*cos(lat)*sin(lng),
+          h*sin(lat)
+          );
+        </pre>
         <img src="pics/Earth3D.png" alt="3D modell of earth" />
 
       </section>
